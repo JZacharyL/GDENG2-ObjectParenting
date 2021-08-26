@@ -129,18 +129,20 @@ void AGameObject::setRotation(Vector3D rot)
 	//Account for parent object
 	Vector3D oldRot = localRotation;
 	this->localRotation = rot;
-	Vector3D rotDiff = localRotation - oldRot;
+	Vector3D rotDiff = localRotation - oldRot;//angles
 	
 	
 	//For all childs
 	for (AGameObject* child : ChildList) {
 		Vector3D dir;
-		Vector3D mag = localPosition - child->localPosition;
+		Vector3D mag = localPosition - child->localPosition;//magnitude
 
-		Vector3D revDiff;
+		Vector3D revDiff = Vector3D(cos(rotDiff.x),sin(rotDiff.y),0.0f); //get x component and y component
 
-
-
+		float angle = atan2(mag.getY(), mag.getX());
+		
+		//dir = revDiff * mag
+		//child->setPosition(dir)?
 		child->setRotation(rotDiff + child->getLocalRotation());
 	}
 }

@@ -54,11 +54,33 @@ Vector3D AGameObject::getLocalPosition()
 	return this->localPosition;
 }
 
-
 void AGameObject::setScale(float x, float y, float z)
 {
-	//Account for parent object
-	this->localScale = Vector3D(x, y, z);
+	Vector3D oldScale = localScale;
+	localScale = Vector3D(x, y, z);
+
+	//Distinguish which axis was actually scaled
+	if (oldScale.x != localScale.x) {
+		//For all childs
+		for (AGameObject* child : ChildList) {
+			Vector3D childScale = Vector3D((localScale.x / oldScale.x) * child->getLocalScale().x, child->getLocalScale().y, child->getLocalScale().z);
+			child->setScale(childScale);
+		}
+	}
+
+	else if (oldScale.y != localScale.y) {
+		for (AGameObject* child : ChildList) {
+			Vector3D childScale = Vector3D(child->getLocalScale().x, child->getLocalScale().y * (localScale.y / oldScale.y), child->getLocalScale().z);
+			child->setScale(childScale);
+		}
+	}
+
+	else if (oldScale.z != localScale.z) {
+		for (AGameObject* child : ChildList) {
+			Vector3D childScale = Vector3D(child->getLocalScale().x, child->getLocalScale().y, (localScale.z / oldScale.z) * child->getLocalScale().z);
+			child->setScale(childScale);
+		}
+	}
 }
 
 void AGameObject::setScale(Vector3D scale)
@@ -70,21 +92,21 @@ void AGameObject::setScale(Vector3D scale)
 	if (oldScale.x != localScale.x) {
 		//For all childs
 		for (AGameObject* child : ChildList) {
-			Vector3D childScale = Vector3D(localScale.x / oldScale.x, child->getLocalScale().y, child->getLocalScale().z);
+			Vector3D childScale = Vector3D((localScale.x / oldScale.x) * child->getLocalScale().x, child->getLocalScale().y, child->getLocalScale().z);
 			child->setScale(childScale);
 		}
 	}
 
 	else if (oldScale.y != localScale.y) {
 		for (AGameObject* child : ChildList) {
-			Vector3D childScale = Vector3D(child->getLocalScale().x, localScale.y / oldScale.y, child->getLocalScale().z);
+			Vector3D childScale = Vector3D(child->getLocalScale().x, child->getLocalScale().y * (localScale.y / oldScale.y), child->getLocalScale().z);
 			child->setScale(childScale);
 		}
 	}
 
 	else if (oldScale.z != localScale.z) {
 		for (AGameObject* child : ChildList) {
-			Vector3D childScale = Vector3D(child->getLocalScale().x, child->getLocalScale().y, localScale.z / oldScale.z);
+			Vector3D childScale = Vector3D(child->getLocalScale().x, child->getLocalScale().y, (localScale.z / oldScale.z) * child->getLocalScale().z);
 			child->setScale(childScale);
 		}
 	}

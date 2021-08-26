@@ -32,21 +32,40 @@ void Inspector::drawUI()
 		if (ImGui::InputFloat3("Scale", this->scaleDisplay, 4)) { this->onTransformUpdate(); }
 		
 		//Parent child UI
-		static char str0[128];
+		string parentTitle;
 		if (this->selectedObject->isChild()) {
-			string parentName = this->selectedObject->getParent()->getName();
-			static char str0[128] = "%s\n", parentName;
+			//Header
+			parentTitle = ("Object parent: %s", this->selectedObject->getParent()->getName());
 		}
 
 		else {
-			static char str0[128] = "None";
+			parentTitle = "Object parent: None";
 		}
-		 
-		ImGui::InputText("Parent Object", str0, IM_ARRAYSIZE(str0));
+
+		//header
+		ImGui::Text(parentTitle.c_str());
+		static char str0[128];
+		ImGui::InputText("Set New Parent", str0, IM_ARRAYSIZE(str0));
 		string textVal = str0;
 
-		cout << textVal << endl;
+		if (ImGui::IsItemEdited()) {
+			//if the text field request an actual object
+			if (GameObjectManager::getInstance()->findObjectByName(textVal) != NULL) {
+				//Set object as parent
+				cout << textVal << endl;
+
+				AGameObject* newParent = GameObjectManager::getInstance()->findObjectByName(textVal);
+				newParent->addChild(selectedObject);
+			}
+
+			else{
+				selectedObject->unsetParent();
+			}
+		}
+
+		//cout << textVal << endl;
 	}
+
 	else {
 		ImGui::Text("No object selected. Select an object first.");
 	}

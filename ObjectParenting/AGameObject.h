@@ -3,6 +3,7 @@
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -36,6 +37,7 @@ public:
 
 	void setPosition(float x, float y, float z);
 	void setPosition(Vector3D pos);
+	//void move(float x, float y, float z);
 	Vector3D getLocalPosition();
 
 	void setScale(float x, float y, float z);
@@ -53,11 +55,14 @@ public:
 	void setEnabled(bool state);
 
 	bool isChild();
+	void addChild(AGameObject* newChild);
 	AGameObject* getParent();
-	void setParent(AGameObject* newParent);
+	
 	void unsetParent();
+	void removeChild(AGameObject* child);
 
 protected:
+	void setParent(AGameObject* newParent);
 	bool hasParent;
 	AGameObject* Parent;
 
@@ -65,7 +70,12 @@ protected:
 	bool enabled = true;
 	Vector3D localPosition;
 	Vector3D localScale;
+	Vector3D relativeScale = Vector3D::ones();
 	Vector3D localRotation = Vector3D::zeros();
 	Matrix4x4 localMatrix;
-};
 
+	//Parent checking
+	//Vector3D getPositionRecursive(float localx, float localy, float localz, AGameObject* parent);
+
+	vector<AGameObject*> ChildList;
+};

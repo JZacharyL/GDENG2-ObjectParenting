@@ -109,6 +109,7 @@ Matrix4x4 Camera::getViewMatrix()
 
 void Camera::onKeyDown(int key)
 {
+	/*
 	if (key == 'C') {
 		if (this->view == View::Perspective)
 		{
@@ -119,6 +120,7 @@ void Camera::onKeyDown(int key)
 			this->view = View::Perspective;
 		}
 	}
+	*/
 }
 
 void Camera::onKeyUp(int key)

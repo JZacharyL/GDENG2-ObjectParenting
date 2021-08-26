@@ -38,7 +38,7 @@ AGameObject* GameObjectManager::findObjectByName(string name)
 		return this->gameObjectMap[name];
 	}
 	else {
-		std::cout << "Object " << name << " not found!";
+		std::cout << "Object " << name << " not found!" << endl;
 		return NULL;
 	}
 }
@@ -77,10 +77,10 @@ void GameObjectManager::addObject(AGameObject* gameObject)
 {
 	if (this->gameObjectMap[gameObject->getName()] != NULL) {
 		int count = 1;
-		String revisedString = gameObject->getName() + " " + "(" + to_string(count) + ")";
+		String revisedString = gameObject->getName() + "(" + to_string(count) + ")";
 		while (this->gameObjectMap[revisedString] != NULL) {
 			count++;
-			revisedString = gameObject->getName() + " " + "(" + to_string(count) + ")";
+			revisedString = gameObject->getName() + "(" + to_string(count) + ")";
 		}
 		//std::cout << "Duplicate found. New name is: " << revisedString << "\n";
 		gameObject->setName(revisedString);

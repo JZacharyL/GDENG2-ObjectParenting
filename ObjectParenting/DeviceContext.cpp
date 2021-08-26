@@ -1,8 +1,9 @@
+
 #include "DeviceContext.h"
 #include "SwapChain.h"
 #include "VertexBuffer.h"
-#include "ConstantBuffer.h"
 #include "IndexBuffer.h"
+#include "ConstantBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
 
@@ -14,7 +15,6 @@ void DeviceContext::clearRenderTargetColor(SwapChain* swap_chain, float red, flo
 {
 	FLOAT clear_color[] = {red,green,blue,alpha};
 	m_device_context->ClearRenderTargetView(swap_chain->m_rtv, clear_color);
-	m_device_context->OMSetRenderTargets(1, &swap_chain->m_rtv, NULL);
 	m_device_context->ClearDepthStencilView(swap_chain->m_dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 	m_device_context->OMSetRenderTargets(1, &swap_chain->m_rtv, swap_chain->m_dsv);
 }
@@ -60,16 +60,15 @@ void DeviceContext::setViewportSize(UINT width, UINT height)
 	m_device_context->RSSetViewports(1, &vp);
 }
 
-void DeviceContext::setVertexShader(VertexShader * vertex_shader)
+void DeviceContext::setVertexShader(VertexShader* vertex_shader)
 {
 	m_device_context->VSSetShader(vertex_shader->m_vs, nullptr, 0);
 }
 
-void DeviceContext::setPixelShader(PixelShader * pixel_shader)
+void DeviceContext::setPixelShader(PixelShader* pixel_shader)
 {
 	m_device_context->PSSetShader(pixel_shader->m_ps, nullptr, 0);
 }
-
 
 void DeviceContext::setConstantBuffer(VertexShader* vertex_shader, ConstantBuffer* buffer)
 {

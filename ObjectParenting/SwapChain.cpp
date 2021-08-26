@@ -1,8 +1,6 @@
 
+
 #include "SwapChain.h"
-
-#include <exception>
-
 #include "GraphicsEngine.h"
 
 SwapChain::SwapChain()
@@ -29,7 +27,7 @@ bool SwapChain::init(HWND hwnd, UINT width, UINT height)
 
 	//Create the swap chain for the window indicated by HWND parameter
 	HRESULT hr=GraphicsEngine::get()->m_dxgi_factory->CreateSwapChain(device, &desc, &m_swap_chain);
-
+	
 	if (FAILED(hr))
 	{
 		return false;
@@ -44,7 +42,6 @@ bool SwapChain::init(HWND hwnd, UINT width, UINT height)
 	{
 		return false;
 	}
-	
 
 	hr=device->CreateRenderTargetView(buffer, NULL, &m_rtv);
 	buffer->Release();
@@ -54,34 +51,24 @@ bool SwapChain::init(HWND hwnd, UINT width, UINT height)
 		return false;
 	}
 
-	D3D11_TEXTURE2D_DESC tex_desc = {};
-	tex_desc.Width = width;
-	tex_desc.Height = height;
-	tex_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	tex_desc.Usage = D3D11_USAGE_DEFAULT;
-	tex_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	tex_desc.MipLevels = 1;
-	tex_desc.SampleDesc.Count = 1;
-	tex_desc.SampleDesc.Quality = 0;
-	tex_desc.MiscFlags = 0;
-	tex_desc.ArraySize = 1;
-	tex_desc.CPUAccessFlags = 0;
+	D3D11_TEXTURE2D_DESC texDesc = {};
+	texDesc.Width = width;
+	texDesc.Height = height;
+	texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	texDesc.Usage = D3D11_USAGE_DEFAULT;
+	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	texDesc.MipLevels = 1;
+	texDesc.SampleDesc.Count = 1;
+	texDesc.SampleDesc.Quality = 0;
+	texDesc.MiscFlags = 0;
+	texDesc.ArraySize = 1;
+	texDesc.CPUAccessFlags = 0;
 
+	HRESULT depthResult = GraphicsEngine::get()->m_d3d_device->CreateTexture2D(&texDesc, NULL, &buffer);
 
-	hr = device->CreateTexture2D(&tex_desc, nullptr, &buffer);
-
-	if (FAILED(hr))
-	{
-		throw std::exception("SwapChain not created successfully");
-	}
-	
-	hr = device->CreateDepthStencilView(buffer, NULL, &m_dsv);
+	HRESULT depthStencilResult = GraphicsEngine::get()->m_d3d_device->CreateDepthStencilView(buffer, NULL, &this->m_dsv);
 	buffer->Release();
 
-	if (FAILED(hr))
-	{
-		return false;
-	}
 	return true;
 }
 

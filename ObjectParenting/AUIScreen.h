@@ -1,22 +1,23 @@
 #pragma once
 #include <string>
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_impl_dx11.h"
+#include "ImGui/imgui_impl_win32.h"
+
 typedef std::string String;
 class UIManager;
+
 class AUIScreen
 {
 protected:
-	typedef std::string String;
-
-	AUIScreen(std::string name);
+	AUIScreen(String name);
 	~AUIScreen();
 
-	std::string getName();
+	String getName();
 	virtual void drawUI() = 0;
 
-	void setActive(bool active);
-	
-	String Name;
-	bool Active;
+	String name;
+
 	friend class UIManager;
 };
 

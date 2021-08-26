@@ -1,60 +1,63 @@
 #include "AGameObject.h"
-#include <iostream>
 
-
-AGameObject::AGameObject()
+AGameObject::AGameObject(string name)
 {
-	LocalScale = Vector3D::Ones();
-	LocalPosition = Vector3D::Zeros();
-	LocalRotation = Vector3D::Zeros();
-	AnimationSpeed = 1.0f;
+	this->name = name;
+	this->localPosition = Vector3D::zeros();
+	this->localRotation = Vector3D::zeros();
+	this->localScale = Vector3D::ones();
 }
 
 AGameObject::~AGameObject()
 {
-
-	
 }
 
-
-
-void AGameObject::setLocalPosition(Vector3D position)
+void AGameObject::setPosition(float x, float y, float z)
 {
-	LocalPosition = position;
+	this->localPosition = Vector3D(x, y, z);
 }
 
-void AGameObject::setLocalScale(Vector3D scale)
+void AGameObject::setPosition(Vector3D pos)
 {
-	LocalScale = scale;
+	this->localPosition = pos;
 }
-
-void AGameObject::setLocalRotation(Vector3D rotation)
-{
-	LocalRotation = rotation;
-}
-
-void AGameObject::setAnimSpeed(float speed)
-{
-	AnimationSpeed = speed;
-}
-
 
 Vector3D AGameObject::getLocalPosition()
 {
-	return this->LocalPosition;
+	return this->localPosition;
+}
+
+void AGameObject::setScale(float x, float y, float z)
+{
+	this->localScale = Vector3D(x, y, z);
+}
+
+void AGameObject::setScale(Vector3D scale)
+{
+	this->localScale = scale;
 }
 
 Vector3D AGameObject::getLocalScale()
 {
-	return this->LocalScale;
+	return this->localScale;
+}
+
+void AGameObject::setRotation(float x, float y, float z)
+{
+	this->localRotation = Vector3D(x, y, z);
+}
+
+void AGameObject::setRotation(Vector3D rot)
+{
+	this->localRotation = rot;
 }
 
 Vector3D AGameObject::getLocalRotation()
 {
-	return this->LocalRotation;
+	return this->localRotation;
 }
 
-float AGameObject::getAnimSpeed()
+string AGameObject::getName()
 {
-	return this->AnimationSpeed;
+	return this->name;
 }

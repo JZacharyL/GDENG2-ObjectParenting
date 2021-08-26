@@ -1,22 +1,25 @@
 #pragma once
-
-
-
 class Point
 {
 public:
-	Point() :m_x(0), m_y(0)
+	Point() : x(0), y(0)
 	{
+
 	}
-	Point(int x,int y):m_x(x),m_y(y)
+	Point(float x, float y) : x(x), y(y)
 	{
+		
 	}
-	Point(const Point & point) :m_x(point.m_x), m_y(point.m_y)
+	Point(const Point& point) : x(point.x), y(point.y)
 	{
+
 	}
+	
 	~Point()
 	{
+		
 	}
+
 public:
-	int m_x = 0, m_y = 0;
+	float x = 0, y = 0;
 };

@@ -1,28 +1,18 @@
 #pragma once
+#include <string>
+#include <vector>
 #include <unordered_map>
-
-#include "imgui/imgui_impl_dx11.h"
-#include "imgui/imgui_impl_win32.h"
-#include  "Window.h"
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_impl_dx11.h"
+#include "ImGui/imgui_impl_win32.h"
+#include "Window.h"
 #include "AUIScreen.h"
-#include "ProfilerScreen.h"
-#include  "MenuBar.h"
-#include "CreditsScreen.h"
-#include "ColorPickerScreen.h"
-#include "GraphicsEngine.h"
-class UINames
-{
-public:
-	const String PROFILER_SCREEN = "PROFILER_SCREEN";
-	const String MENU_SCREEN = "MENU_SCREEN";
-	const String CREDITS_SCREEN = "CREDITS_SCREEN";
-	const String COLORUI_SCREEN = "COLORUI_SCREEN";
-};
+#include "UINames.h"
 
 class UIManager
 {
 public:
-	typedef  std::string String;
+	typedef std::string String;
 	typedef std::vector<AUIScreen*> UIList;
 	typedef std::unordered_map<String, AUIScreen*> UITable;
 
@@ -30,11 +20,13 @@ public:
 	static void initialize(HWND windowHandle);
 	static void destroy();
 
+	bool doesScreenExist(String name);
+	void addUIScreen(AUIScreen* screen);
+	void deleteUIScreen(AUIScreen* screen);
 	void drawAllUI();
-	void setEnabled(String uiName, bool flag);
-	AUIScreen* findUIByName(String uiName);
-	static const int Window_Width = 1440;
-	static const int Window_Height = 900;
+
+	static const int WINDOW_WIDTH = 1440;
+	static const int WINDOW_HEIGHT = 900;
 
 private:
 	UIManager(HWND windowHandle);
@@ -43,8 +35,7 @@ private:
 	UIManager& operator=(UIManager const&) {};
 	static UIManager* sharedInstance;
 
-	UIList uiList;
-	UITable uiTable;
-	
+	UIList uList;
+	UITable uTable;
 };
 

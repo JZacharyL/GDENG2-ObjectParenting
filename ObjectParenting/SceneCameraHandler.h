@@ -1,28 +1,27 @@
 #pragma once
-#include "ProtoCamera.h"
+#include "Camera.h"
 
 class SceneCameraHandler
 {
 public:
-	static SceneCameraHandler* getInstance();
-	static void initialize();
+	static SceneCameraHandler* get();
+	static void initialize(RECT window);
 	static void destroy();
-	
+
 	void update();
+	
 
 	Matrix4x4 getSceneCameraViewMatrix();
+	Camera::View getSceneCameraProjectionMatrix();
 
 private:
-
-	SceneCameraHandler();
+	SceneCameraHandler(RECT window);
 	~SceneCameraHandler();
 	SceneCameraHandler(SceneCameraHandler const&) {};
 	SceneCameraHandler& operator=(SceneCameraHandler const&) {};
 	static SceneCameraHandler* sharedInstance;
-
 	
-
-	ProtoCamera* sceneCamera;
-
+	Camera* sceneCamera;
+	RECT window;
 };
 

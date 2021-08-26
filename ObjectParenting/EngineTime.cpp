@@ -1,11 +1,13 @@
 #include "EngineTime.h"
+
 EngineTime* EngineTime::sharedInstance = NULL;
+
 void EngineTime::initialize()
 {
 	sharedInstance = new EngineTime();
 }
 
-double EngineTime::getDeltaTime()
+float EngineTime::getDeltaTime()
 {
 	return sharedInstance->deltaTime;
 }
@@ -29,4 +31,6 @@ void EngineTime::LogFrameEnd()
 	std::chrono::duration<double> elapsed_seconds = sharedInstance->end - sharedInstance->start;
 
 	sharedInstance->deltaTime = elapsed_seconds.count();
+
+	//std::cout << "Frame update finished in " << sharedInstance->deltaTime << std::endl;
 }

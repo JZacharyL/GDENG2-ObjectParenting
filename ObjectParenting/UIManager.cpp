@@ -1,5 +1,9 @@
 #include "UIManager.h"
-UIManager* UIManager::sharedInstance = NULL;
+#include "GraphicsEngine.h"
+#include "ProfilerScreen.h"
+#include "MenuScreen.h"
+
+UIManager* UIManager::sharedInstance = NULL;\
 
 UIManager* UIManager::getInstance()
 {
@@ -16,42 +20,47 @@ void UIManager::destroy()
 	delete sharedInstance;
 }
 
+bool UIManager::doesScreenExist(String name)
+{
+	return this->uTable[name] != nullptr;
+}
+
+void UIManager::addUIScreen(AUIScreen* screen)
+{
+	this->uTable[screen->getName()] = screen;
+	this->uList.push_back(screen);
+}
+
+void UIManager::deleteUIScreen(AUIScreen* screen)
+{
+	this->uTable.erase(screen->getName());
+
+	std::vector<AUIScreen*>::iterator it = this->uList.begin();
+
+	while(it != this->uList.end())
+	{
+		if ((*it)->getName() == screen->name)
+		{
+			this->uList.erase(it);
+			break;
+		}
+			
+		++it;
+	}
+}
+
 void UIManager::drawAllUI()
 {
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	for (int i = 0; i < this->uiList.size();i++)
-	{
-		if (uiList[i]->Active == true) {
-			this->uiList[i]->drawUI();
-		}
+	for (int i = 0; i < this->uList.size(); i++) {
+		this->uList[i]->drawUI();
 	}
-	
+
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-}
-
-void UIManager::setEnabled(String uiName, bool flag)
-{
-	if(this->uiTable[uiName] != nullptr)
-	{
-		this->uiTable[uiName]->setActive(flag);
-	}
-}
-
-AUIScreen* UIManager::findUIByName(String uiName)
-{
-	if(this->uiTable[uiName] != nullptr)
-	{
-		return this->uiTable[uiName];
-	}
-
-	else
-	{
-		return nullptr;
-	}
 }
 
 UIManager::UIManager(HWND windowHandle)
@@ -63,24 +72,16 @@ UIManager::UIManager(HWND windowHandle)
 	ImGui::StyleColorsDark();
 
 	ImGui_ImplWin32_Init(windowHandle);
-	ImGui_ImplDX11_Init(GraphicsEngine::get()->getDevice(), GraphicsEngine::get()->getDeviceContext());
+	ImGui_ImplDX11_Init(GraphicsEngine::get()->getDirectXDevice(), GraphicsEngine::get()->getContext());
 
 	UINames uiNames;
 	ProfilerScreen* profilerScreen = new ProfilerScreen();
-	this->uiTable[uiNames.PROFILER_SCREEN] = profilerScreen;
-	this->uiList.push_back(profilerScreen);
+	this->uTable[uiNames.PROFILER_SCREEN] = profilerScreen;
+	this->uList.push_back(profilerScreen);
 
-	MenuBar* menuScreen = new MenuBar();
-	this->uiTable[uiNames.MENU_SCREEN] = menuScreen;
-	this->uiList.push_back(menuScreen);
-
-	CreditsScreen* creditsScreen = new CreditsScreen();
-	this->uiTable[uiNames.CREDITS_SCREEN] = creditsScreen;
-	this->uiList.push_back(creditsScreen);
-
-	ColorPickerScreen* colorPickerScreen = new ColorPickerScreen();
-	this->uiTable[uiNames.COLORUI_SCREEN] = colorPickerScreen;
-	this->uiList.push_back(colorPickerScreen);
+	MenuScreen* menuScreen = new MenuScreen();
+	this->uTable[uiNames.MENU_SCREEN] = menuScreen;
+	this->uList.push_back(menuScreen);
 }
 
 UIManager::~UIManager()

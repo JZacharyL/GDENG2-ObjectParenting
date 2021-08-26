@@ -11,12 +11,12 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 
-class Plane : public AGameObject
+class Quad : public AGameObject
 {
 public:
-	Plane(string name, void* shaderByteCode, size_t sizeShader);
-	~Plane();
-
+	Quad(string name, void* shaderByteCode, size_t sizeShader);
+	~Quad();
+	
 	void update(float deltaTime) override;
 	void draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader) override;
 
@@ -29,6 +29,8 @@ private:
 
 	float ticks = 0.0f;
 	float deltaPos = 0.0f;
+	float deltaScale = 0.0f;
+	float deltaRot = 0.0f;
 	float deltaTime = 0.0f;
 	float speed = 10.0f;
 };

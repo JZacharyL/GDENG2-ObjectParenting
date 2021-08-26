@@ -1,12 +1,10 @@
-#pragma once
-#include <string>
-#include <Windows.h>
-#include "KeyboardClass.h"
-#include "EngineTime.h"
-#include  "imgui\imgui.h"
-#include  "imgui\imgui_impl_win32.h"
 
-#include  "imgui\imgui_impl_dx11.h"
+#pragma once
+#include <Windows.h>
+#include <DirectXMath.h>
+#include "EngineTime.h"
+#include "UIManager.h"
+
 class Window
 {
 public:
@@ -20,10 +18,7 @@ public:
 
 	RECT getClientWindowRect();
 	void setHWND(HWND hwnd);
-	HWND getHWND();
-	 char getKey();
-
-	
+	void input(RAWINPUT* raw);
 
 	//EVENTS
 	virtual void onCreate();
@@ -31,14 +26,12 @@ public:
 	virtual void onDestroy();
 	virtual void onFocus();
 	virtual void onKillFocus();
-	
-
-	
 
 	~Window();
+	
 protected:
 	HWND m_hwnd;
 	bool m_is_run;
-	
+
 };
 

@@ -2,11 +2,11 @@
 #include "AUIScreen.h"
 
 class UIManager;
-class ProfilerScreen : public AUIScreen
+class MenuScreen : public AUIScreen
 {
 private:
-	ProfilerScreen();
-	~ProfilerScreen();
+	MenuScreen();
+	~MenuScreen();
 
 	virtual void drawUI() override;
 

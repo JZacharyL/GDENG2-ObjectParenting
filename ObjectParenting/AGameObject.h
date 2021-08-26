@@ -1,62 +1,57 @@
 #pragma once
 #include <string>
-#include <vector>
-#include "GraphicsEngine.h"
-#include "EngineTime.h"
-#include "SwapChain.h"
-#include "DeviceContext.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "ConstantBuffer.h"
-#include "VertexShader.h"
-#include "PixelShader.h"
 #include "Vector3D.h"
 #include "Matrix4x4.h"
-#include "Point.h"
 
-struct vertex
-{
-	Vector3D position;
-	Vector3D color;
-	Vector3D color1;
-};
-__declspec(align(16))
-struct constant
-{
-	Matrix4x4 m_world;
-	Matrix4x4 m_view;
-	Matrix4x4 m_proj;
-	float m_angle;
-	unsigned int m_time;
-};
+using namespace std;
 
+class VertexShader;
+class PixelShader;
 
 class AGameObject
 {
 public:
-	AGameObject();
+	AGameObject(string name);
 	~AGameObject();
 
-	void setLocalPosition(Vector3D position);
-	void setLocalScale(Vector3D scale);
-	void setLocalRotation(Vector3D rotation);
-	void setAnimSpeed(float speed);
+	virtual void update(float deltaTime) = 0;
+	virtual void draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader) = 0;
 
-	//virtual void update(float deltatime) = 0;
-
+	void setPosition(float x, float y, float z);
+	void setPosition(Vector3D pos);
 	Vector3D getLocalPosition();
+
+	void setScale(float x, float y, float z);
+	void setScale(Vector3D scale);
 	Vector3D getLocalScale();
+
+	void setRotation(float x, float y, float z);
+	void setRotation(Vector3D rot);
 	Vector3D getLocalRotation();
-	float getAnimSpeed();
-private:
-	
 
-	Vector3D LocalScale;
-	Vector3D LocalPosition;
-	Vector3D LocalRotation;
-	float AnimationSpeed;
+	string getName();
 
+	struct vertex
+	{
+		Vector3D position;
+		Vector3D color;
+		Vector3D color1;
+	};
 
+	__declspec(align(16))
+	struct constant
+	{
+		Matrix4x4 m_world;
+		Matrix4x4 m_view;
+		Matrix4x4 m_projection;
+		double m_time;
+	};
 
+protected:
+	string name;
+	Vector3D localPosition;
+	Vector3D localScale;
+	Vector3D localRotation = Vector3D::zeros();
+	Matrix4x4 localMatrix;
 };
 

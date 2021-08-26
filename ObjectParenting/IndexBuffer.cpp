@@ -1,10 +1,7 @@
-
-
 #include "IndexBuffer.h"
 #include "GraphicsEngine.h"
 
-
-IndexBuffer::IndexBuffer() : m_buffer(0)
+IndexBuffer::IndexBuffer()
 {
 }
 
@@ -15,7 +12,7 @@ bool IndexBuffer::load(void* list_indices, UINT size_list)
 	D3D11_BUFFER_DESC buff_desc = {};
 	buff_desc.Usage = D3D11_USAGE_DEFAULT;
 	buff_desc.ByteWidth = 4 * size_list;
-	buff_desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	buff_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	buff_desc.CPUAccessFlags = 0;
 	buff_desc.MiscFlags = 0;
 
@@ -28,6 +25,7 @@ bool IndexBuffer::load(void* list_indices, UINT size_list)
 	{
 		return false;
 	}
+
 
 	return true;
 }
@@ -44,8 +42,6 @@ bool IndexBuffer::release()
 	return true;
 }
 
-
 IndexBuffer::~IndexBuffer()
 {
 }
-

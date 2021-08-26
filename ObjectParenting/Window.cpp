@@ -1,24 +1,23 @@
 
+
 #include "Window.h"
-#include <iostream>
-#include <string>
-#include "UIManager.h"
+#include "ImGui/imgui.h"
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 //Window* window=nullptr;
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 Window::Window()
 {
 	
 }
 
 
-KeyboardClass keyboard;
 LRESULT CALLBACK WndProc(HWND hwnd,UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	if(ImGui_ImplWin32_WndProcHandler(hwnd,msg,wparam,lparam))
-	{
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
 		return true;
-	}
+	
 	switch (msg)
 	{
 	case WM_CREATE:
@@ -29,22 +28,19 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg, WPARAM wparam, LPARAM lparam)
 		// .. and then stored for later lookup
 		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)window);
 		window->setHWND(hwnd);
-		
-
-			
 		window->onCreate();
 		break;
 	}
+
 	case WM_SETFOCUS:
 	{
-		// Event fired when the window get focus
 		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		window->onFocus();
 		break;
 	}
+
 	case WM_KILLFOCUS:
 	{
-		// Event fired when the window lost focus
 		Window* window = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 		window->onKillFocus();
 		break;
@@ -59,23 +55,17 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT msg, WPARAM wparam, LPARAM lparam)
 		break;
 	}
 
-		
-	
 
 	default:
 		return ::DefWindowProc(hwnd, msg, wparam, lparam);
 	}
 
 	return NULL;
-
-	
 }
 
 
 bool Window::init()
 {
-
-
 	//Setting up WNDCLASSEX object
 	WNDCLASSEX wc;
 	wc.cbClsExtra = NULL;
@@ -86,8 +76,8 @@ bool Window::init()
 	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
 	wc.hInstance = NULL;
-	wc.lpszClassName = "MyWindowClass";
-	wc.lpszMenuName = "";
+	wc.lpszClassName = L"MyWindowClass";
+	wc.lpszMenuName = L"";
 	wc.style = NULL;
 	wc.lpfnWndProc = &WndProc;
 
@@ -98,24 +88,22 @@ bool Window::init()
 		window = this;*/
 
 	//Creation of the window
-	m_hwnd=::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, "MyWindowClass", "DirectX Application", 
+	m_hwnd=::CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"MyWindowClass", L"DirectX Application", 
 		WS_CAPTION|WS_SYSMENU, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768,
 		NULL, NULL, NULL, this);
 
 	//if the creation fail return false
 	if (!m_hwnd) 
 		return false;
-	
-
-
 
 	//show up the window
 	::ShowWindow(m_hwnd, SW_SHOW);
 	::UpdateWindow(m_hwnd);
 
 	EngineTime::initialize();
+	UIManager::initialize(m_hwnd);
 	
-	
+
 	//set this flag to true to indicate that the window is initialized and running
 	m_is_run = true;
 
@@ -168,38 +156,9 @@ void Window::setHWND(HWND hwnd)
 	this->m_hwnd = hwnd;
 }
 
-HWND Window::getHWND()
+void Window::input(RAWINPUT* raw)
 {
-	return this->m_hwnd;
-}
-
-char Window::getKey()
-{
-	char retChar = NULL;
-	if(keyboard.KeyIsPressed('W'))
-	{
-		 retChar = 'W';
-		// std::cout << retChar << std::endl;
-	}
-
-	if (keyboard.KeyIsPressed('A'))
-	{
-		retChar = 'A';
-		//std::cout << retChar << std::endl;
-	}
-	
-	if (keyboard.KeyIsPressed('S'))
-	{
-		retChar = 'S';
-		//std::cout << retChar << std::endl;
-	}
-	
-	if (keyboard.KeyIsPressed('D'))
-	{
-		retChar = 'D';
-		//std::cout << retChar << std::endl;
-	}
-	return retChar;
+	//Handler->update(raw);
 }
 
 void Window::onCreate()
@@ -208,38 +167,11 @@ void Window::onCreate()
 
 void Window::onUpdate()
 {
-	/*
-	while (!keyboard.CharBufferIsEmpty())
-	{
-		unsigned char ch = keyboard.ReadChar();
-		std::string outmsg = "Char: ";
-		outmsg += ch;
-		outmsg += "\n";
-		OutputDebugStringA(outmsg.c_str());
+}
 
-		std::cout << "Char = " << outmsg.c_str() << std::endl;
-	}
-
-	while (!keyboard.KeyBufferIsEmpty())
-	{
-		KeyboardEvent kbe = keyboard.ReadKey();
-		unsigned char keycode = kbe.GetKeyCode();
-		std::string outmsg = "";
-		if (kbe.IsPress())
-		{
-			outmsg += "key pressed: ";
-			std::cout << "keypressed" << std::endl;
-		}
-		if (kbe.IsRelease())
-		{
-			outmsg += "key release: ";
-			std::cout << "keyrelease" << std::endl;
-		}
-		outmsg += keycode;
-		outmsg += "\n";
-		OutputDebugStringA(outmsg.c_str());
-	}
-	*/
+void Window::onDestroy()
+{
+	m_is_run = false;
 }
 
 void Window::onFocus()
@@ -250,10 +182,6 @@ void Window::onKillFocus()
 {
 }
 
-void Window::onDestroy()
-{
-	m_is_run = false;
-}
 
 Window::~Window()
 {

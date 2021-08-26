@@ -1,61 +1,83 @@
-
 #pragma once
 
 class Vector3D
 {
 public:
-	Vector3D() :m_x(0), m_y(0), m_z(0)
+	Vector3D() : x(0), y(0), z(0)
 	{
+		
 	}
-	Vector3D(float x, float y, float z) :m_x(x), m_y(y), m_z(z)
+	Vector3D(float x, float y, float z) : x(x), y(y), z(z)
 	{
+
 	}
-	Vector3D(const Vector3D& vector) :m_x(vector.m_x), m_y(vector.m_y), m_z(vector.m_z)
+	Vector3D(const Vector3D& vector) : x(vector.x), y(vector.y), z(vector.z)
 	{
+
+	}
+
+	~Vector3D()
+	{
+		
 	}
 
 	static Vector3D lerp(const Vector3D& start, const Vector3D& end, float delta)
 	{
 		Vector3D v;
-		v.m_x = start.m_x * (1.0f - delta) + end.m_x * (delta);
-		v.m_y = start.m_y * (1.0f - delta) + end.m_y * (delta);
-		v.m_z = start.m_z * (1.0f - delta) + end.m_z * (delta);
+
+		v.x = start.x * (1.0f - delta) + end.x * delta;
+		v.y = start.y * (1.0f - delta) + end.y * delta;
+		v.z = start.z * (1.0f - delta) + end.z * delta;
+
 		return v;
+	}
+
+	static Vector3D zeros()
+	{
+		Vector3D v;
+
+		v.x = 0;
+		v.y = 0;
+		v.z = 0;
+
+		return v;
+	}
+
+	static Vector3D ones()
+	{
+		Vector3D v;
+
+		v.x = 1;
+		v.y = 1;
+		v.z = 1;
+
+		return v;
+	}
+
+	float getX() const
+	{
+		return x;
+	}
+
+	float getY() const
+	{
+		return y;
+	}
+
+	float getZ() const
+	{
+		return z;
 	}
 
 	Vector3D operator *(float num)
 	{
-		return Vector3D(m_x * num, m_y * num, m_z * num);
+		return Vector3D(x * num, y * num, z * num);
 	}
 
 	Vector3D operator +(Vector3D vec)
 	{
-		return Vector3D(m_x + vec.m_x, m_y + vec.m_y, m_z + vec.m_z);
+		return Vector3D(x + vec.x, y + vec.y, z + vec.z);
 	}
-
-	static Vector3D Zeros()
-	{
-		Vector3D v;
-		v.m_x = 0;
-		v.m_y = 0;
-		v.m_z = 0;
-		return v;
-	}
-
-	static Vector3D Ones()
-	{
-		Vector3D v;
-		v.m_x = 1;
-		v.m_y = 1;
-		v.m_z = 1;
-		return v;
-	}
-
-
-	~Vector3D()
-	{
-	}
-
-public:
-	float m_x, m_y, m_z;
+	
+	float x, y, z;
 };

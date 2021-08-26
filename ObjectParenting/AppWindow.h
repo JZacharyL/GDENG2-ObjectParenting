@@ -1,29 +1,29 @@
 
 #pragma once
+#include <vector>
 #include "Window.h"
 #include "GraphicsEngine.h"
 #include "SwapChain.h"
 #include "DeviceContext.h"
 #include "VertexBuffer.h"
-#include "ConstantBuffer.h"
 #include "IndexBuffer.h"
+#include "ConstantBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
-#include "Cube.h"
+#include "Quad.h"
 #include "Plane.h"
 #include "InputListener.h"
-#include "Point.h"
-#include "GenericShape.h"
-#include "SceneCameraHandler.h"
-
+#include "ImGui/imgui.h"
 
 class AppWindow: public Window, public InputListener
 {
 public:
 	AppWindow();
 	~AppWindow();
-	
-	static void initialize();
+
+	void initialize();
+	void updateQuadPosition();
+
 	// Inherited via Window
 	virtual void onCreate() override;
 	virtual void onUpdate() override;
@@ -31,50 +31,46 @@ public:
 	virtual void onFocus() override;
 	virtual void onKillFocus() override;
 	
-
 	// Inherited via InputListener
 	virtual void onKeyDown(int key) override;
 	virtual void onKeyUp(int key) override;
+	virtual void onMouseMove(const Point& deltaMousePos) override;
+	
+	virtual void onLeftMouseDown(const Point& deltaMousePos) override;
+	virtual void onLeftMouseUp(const Point& deltaMousePos) override;
+	virtual void onRightMouseDown(const Point& deltaMousePos) override;
+	virtual void onRightMouseUp(const Point& deltaMousePos) override;
 
-	virtual void onMouseMove(const Point& delta_mouse_pos) override;
-
-	virtual void onLeftMouseDown(const Point& mouse_pos) override;
-	virtual void onLeftMouseUp(const Point& mouse_pos) override;
-	virtual void onRightMouseDown(const Point& mouse_pos) override;
-	virtual void onRightMouseUp(const Point& mouse_pos) override;
-
-	LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	typedef vector<AGameObject*> QuadList;
+	
 private:
-	
-	
-	AppWindow(AppWindow const&) {}; //copy constructor is private
-	AppWindow& operator=(AppWindow const&) {}; //assignment operator is private
-
-	static AppWindow* sharedInstance;
-	static float RandomFloat(float a, float b);
-
-	
-
-
-	
-	Cube CubeArray[100];
-	Plane firstPlane;
-	Cube firstCube;
-	Cube SecondCube;
-	Cube ThirdCube;
-	GenericShape genericShape;
-	//ProtoCamera Camera;
-	
 	SwapChain * m_swap_chain;
-	VertexBuffer* m_vb;
-	
 	VertexShader* m_vs;
 	PixelShader* m_ps;
 
-	ConstantBuffer* m_cb;
-	IndexBuffer* m_ib;
+private:
+	int nQuad = 50;
+	QuadList quadList;
+	double multiplier = 0;
+	double increment = 0.01;
 
-	
+private:
+	float m_old_delta;
+	float m_new_delta;
+	float m_delta_time;
 
-	
+	float m_delta_pos;
+	float m_delta_scale;
+
+	float rotSpeed = 0.707f;
+	float delta_rot_x = 0.0f;
+	float delta_rot_y = 0.0f;
+
+	float delta_Scale = 1.0f;
+
+	float forward = 0.0f;
+	float right = 0.0f;
+
+	Matrix4x4 camera;
 };
+

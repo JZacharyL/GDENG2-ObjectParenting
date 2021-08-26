@@ -1,19 +1,19 @@
-#include "Plane.h"
+#include "Quad.h"
 #include "SceneCameraHandler.h"
 
-Plane::Plane(string name, void* shaderByteCode, size_t sizeShader) : AGameObject(name)
+Quad::Quad(string name, void* shaderByteCode, size_t sizeShader) : AGameObject(name)
 {
 	vertex vertex_list[] =
 	{
-		{Vector3D(-0.25f,-0.01f,-0.25f),	Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS1
-		{Vector3D(-0.25f,0.01f,-0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS2
-		{Vector3D(0.25f,0.01f,-0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS3
-		{Vector3D(0.25f,-0.01f,-0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)},
+		{Vector3D(-0.25f,-0.25f,-0.25f),	Vector3D(1,0,0),		Vector3D(0,1,0)}, // POS1
+		{Vector3D(-0.25f,0.25f,-0.25f),		Vector3D(0,1,0),		Vector3D(0,0,1)}, // POS2
+		{Vector3D(0.25f,0.25f,-0.25f),		Vector3D(0,0,1),		Vector3D(1,0,0)}, // POS3
+		{Vector3D(0.25f,-0.25f,-0.25f),		Vector3D(1,1,0),		Vector3D(0,0,0)},
 
-		{Vector3D(0.25f,-0.01f,0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS1
-		{Vector3D(0.25f,0.01f,0.25f),			Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS2
-		{Vector3D(-0.25f,0.01f,0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS3
-		{Vector3D(-0.25f,-0.01f,0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)},
+		{Vector3D(0.25f,-0.25f,0.25f),		Vector3D(1,0,0),		Vector3D(0,1,0)}, // POS1
+		{Vector3D(0.25f,0.25f,0.25f),			Vector3D(0,1,0),		Vector3D(0,0,1)}, // POS2
+		{Vector3D(-0.25f,0.25f,0.25f),		Vector3D(0,0,1),		Vector3D(1,0,0)}, // POS3
+		{Vector3D(-0.25f,-0.25f,0.25f),		Vector3D(1,1,0),		Vector3D(0,0,0)},
 	};
 
 	this->vertexBuffer = GraphicsEngine::get()->createVertexBuffer();
@@ -51,12 +51,12 @@ Plane::Plane(string name, void* shaderByteCode, size_t sizeShader) : AGameObject
 
 	constant cc;
 	cc.m_time = 0;
-
+	
 	this->constantBuffer = GraphicsEngine::get()->createConstantBuffer();
 	this->constantBuffer->load(&cc, sizeof(constant));
 }
 
-Plane::~Plane()
+Quad::~Quad()
 {
 	this->vertexBuffer->release();
 	this->indexBuffer->release();
@@ -64,14 +64,14 @@ Plane::~Plane()
 	AGameObject::~AGameObject();
 }
 
-void Plane::update(float deltaTime)
+void Quad::update(float deltaTime)
 {
 	this->deltaTime = deltaTime;
 	this->ticks += deltaTime;
 	float rotSpeed = this->ticks + this->deltaTime;
-	//this->setRotation(0.3f, rotSpeed, 0.0f);
+	//this->setRotation(rotSpeed, rotSpeed, rotSpeed);
 	//this->setRotation(this->getLocalRotation().x, rotSpeed, this->getLocalRotation().z);
-
+	
 	/*
 	GraphicsEngine::get()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
 	GraphicsEngine::get()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
@@ -90,7 +90,7 @@ void Plane::update(float deltaTime)
 	*/
 }
 
-void Plane::draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader)
+void Quad::draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader)
 {
 	GraphicsEngine* graphicsEngine = GraphicsEngine::get();
 	DeviceContext* deviceContext = graphicsEngine->getImmediateDeviceContext();
@@ -99,13 +99,17 @@ void Plane::draw(int width, int height, VertexShader* vertexShader, PixelShader*
 
 	if (this->deltaPos > 1.0f)
 		this->deltaPos = 0.0f;
-
+	
 	else
 		this->deltaPos += this->deltaTime / 10.0f;
-
+	
+	this->deltaScale += this->deltaTime / 1.0f;
+	
 	Matrix4x4 allMatrix; allMatrix.setIdentity();
 	Matrix4x4 translationMatrix; translationMatrix.setIdentity(); translationMatrix.setTranslation(this->getLocalPosition());
+	//Matrix4x4 translationMatrix; translationMatrix.setTranslation(Vector3D::lerp(Vector3D(-2, -2, 0), Vector3D(2, 2, 0), this->deltaPos));
 	Matrix4x4 scaleMatrix; scaleMatrix.setIdentity(); scaleMatrix.setScale(this->getLocalScale());
+	//Matrix4x4 scaleMatrix; scaleMatrix.setScale(Vector3D::lerp(Vector3D::ones(), Vector3D(3.0f, 3.0f, 0.0f), (sin(this->deltaScale) +1.0f) / 2.0f));
 	Vector3D rotation = this->getLocalRotation();
 	Matrix4x4 xMatrix; xMatrix.setIdentity(); xMatrix.setRotationX(rotation.x);
 	Matrix4x4 yMatrix; yMatrix.setIdentity(); yMatrix.setRotationY(rotation.y);
@@ -115,19 +119,20 @@ void Plane::draw(int width, int height, VertexShader* vertexShader, PixelShader*
 	rotMatrix = rotMatrix.multiplyTo(xMatrix.multiplyTo(yMatrix.multiplyTo(zMatrix)));
 	allMatrix = allMatrix.multiplyTo(scaleMatrix.multiplyTo(rotMatrix));
 	allMatrix *= translationMatrix;
-
+	
 	//cc.m_world.setIdentity();
 	cc.m_world = allMatrix;
 
 	Matrix4x4 cameraMatrix = SceneCameraHandler::get()->getSceneCameraViewMatrix();
 	cc.m_view = cameraMatrix;
-
+	
 	Camera::View projectionMatrix = SceneCameraHandler::get()->getSceneCameraProjectionMatrix();
 
 	if(projectionMatrix == Camera::View::Perspective)
 		cc.m_projection.setPerspectiveFovLH(1.57f, ((float)width / (float)height), 0.1f, 100.0f);
 	else if(projectionMatrix == Camera::View::Orthographic)
 		cc.m_projection.setOrthoLH(width / 400.0f, height / 400.0f, -4.0f, 4.0f);
+
 
 	cc.m_time = ::GetTickCount() / 1000.0f;
 
@@ -144,7 +149,7 @@ void Plane::draw(int width, int height, VertexShader* vertexShader, PixelShader*
 	deviceContext->drawIndexedTriangleList(this->indexBuffer->getSizeIndexList(), 0, 0);
 }
 
-void Plane::setAnimSpeed(float speed)
+void Quad::setAnimSpeed(float speed)
 {
 	this->speed = speed;
 }

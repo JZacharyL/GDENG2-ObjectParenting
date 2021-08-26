@@ -14,7 +14,7 @@ public:
 private:
 	UINT m_size_list;
 private:
-	ID3D11Buffer * m_buffer;
+	ID3D11Buffer* m_buffer;
 private:
 	friend class DeviceContext;
 };

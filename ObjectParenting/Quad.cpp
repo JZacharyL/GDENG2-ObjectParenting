@@ -105,17 +105,32 @@ void Quad::draw(int width, int height, VertexShader* vertexShader, PixelShader* 
 	
 	this->deltaScale += this->deltaTime / 1.0f;
 	
-	Matrix4x4 allMatrix; allMatrix.setIdentity();
-	Matrix4x4 translationMatrix; translationMatrix.setIdentity(); translationMatrix.setTranslation(this->getLocalPosition());
-	//Matrix4x4 translationMatrix; translationMatrix.setTranslation(Vector3D::lerp(Vector3D(-2, -2, 0), Vector3D(2, 2, 0), this->deltaPos));
-	Matrix4x4 scaleMatrix; scaleMatrix.setIdentity(); scaleMatrix.setScale(this->getLocalScale());
-	//Matrix4x4 scaleMatrix; scaleMatrix.setScale(Vector3D::lerp(Vector3D::ones(), Vector3D(3.0f, 3.0f, 0.0f), (sin(this->deltaScale) +1.0f) / 2.0f));
-	Vector3D rotation = this->getLocalRotation();
-	Matrix4x4 xMatrix; xMatrix.setIdentity(); xMatrix.setRotationX(rotation.x);
-	Matrix4x4 yMatrix; yMatrix.setIdentity(); yMatrix.setRotationY(rotation.y);
-	Matrix4x4 zMatrix; zMatrix.setIdentity(); zMatrix.setRotationZ(rotation.z);
+	Matrix4x4 allMatrix; 
+	allMatrix.setIdentity();
 
-	Matrix4x4 rotMatrix; rotMatrix.setIdentity();
+	Matrix4x4 translationMatrix; 
+	translationMatrix.setIdentity(); 
+	translationMatrix.setTranslation(this->getLocalPosition());
+
+	//Matrix4x4 translationMatrix; translationMatrix.setTranslation(Vector3D::lerp(Vector3D(-2, -2, 0), Vector3D(2, 2, 0), this->deltaPos));
+	Matrix4x4 scaleMatrix; 
+	scaleMatrix.setIdentity(); 
+	scaleMatrix.setScale(this->getLocalScale());
+
+	//Matrix4x4 scaleMatrix; scaleMatrix.setScale(Vector3D::lerp(Vector3D::ones(), Vector3D(3.0f, 3.0f, 0.0f), (sin(this->deltaScale) +1.0f) / 2.0f));
+
+	Vector3D rotation = this->getLocalRotation();
+	Matrix4x4 xMatrix; xMatrix.setIdentity(); 
+	xMatrix.setRotationX(rotation.x);
+
+	Matrix4x4 yMatrix; yMatrix.setIdentity(); 
+	yMatrix.setRotationY(rotation.y);
+
+	Matrix4x4 zMatrix; zMatrix.setIdentity(); 
+	zMatrix.setRotationZ(rotation.z);
+
+	Matrix4x4 rotMatrix; 
+	rotMatrix.setIdentity();
 	rotMatrix = rotMatrix.multiplyTo(xMatrix.multiplyTo(yMatrix.multiplyTo(zMatrix)));
 	allMatrix = allMatrix.multiplyTo(scaleMatrix.multiplyTo(rotMatrix));
 	allMatrix *= translationMatrix;

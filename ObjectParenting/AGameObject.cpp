@@ -54,6 +54,7 @@ Vector3D AGameObject::getLocalPosition()
 	return this->localPosition;
 }
 
+//Total time take 6 hours
 void AGameObject::setScale(float x, float y, float z)
 {
 	Vector3D oldScale = localScale;
@@ -126,7 +127,22 @@ void AGameObject::setRotation(float x, float y, float z)
 void AGameObject::setRotation(Vector3D rot)
 {
 	//Account for parent object
+	Vector3D oldRot = localRotation;
 	this->localRotation = rot;
+	Vector3D rotDiff = localRotation - oldRot;
+	
+	
+	//For all childs
+	for (AGameObject* child : ChildList) {
+		Vector3D dir;
+		Vector3D mag = localPosition - child->localPosition;
+
+		Vector3D revDiff;
+
+
+
+		child->setRotation(rotDiff + child->getLocalRotation());
+	}
 }
 
 Vector3D AGameObject::getLocalRotation()

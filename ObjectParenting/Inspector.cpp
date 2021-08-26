@@ -97,7 +97,14 @@ void Inspector::onTransformUpdate()
 {
 	if (this->selectedObject != NULL) {
 		this->selectedObject->setPosition(Vector3D(this->positionDisplay[0], this->positionDisplay[1], this->positionDisplay[2]));
-		this->selectedObject->setRotation(Vector3D(this->rotationDisplay[0], this->rotationDisplay[1], this->rotationDisplay[2]));
+
+		float rotX = this->rotationDisplay[0] * 0.0174533;
+		float rotY = this->rotationDisplay[1] * 0.0174533;
+		float rotZ = this->rotationDisplay[2] * 0.0174533;
+
+		this->selectedObject->setRotation(Vector3D(rotX, rotY, rotZ));
+
+
 		this->selectedObject->setScale(Vector3D(this->scaleDisplay[0], this->scaleDisplay[1], this->scaleDisplay[2]));
 	}
 }

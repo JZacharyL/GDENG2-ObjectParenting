@@ -54,8 +54,8 @@ CreditsScreen::CreditsScreen() : AUIScreen("CreditsScreen")
 {
     width = 0;
     height = 0;
-    bool ret = LoadTextureFromFile("Logo.png", &this->imageTexture, &width, &height);
-    IM_ASSERT(ret);
+    //bool ret = LoadTextureFromFile("Logo.png", &this->imageTexture, &width, &height);
+    //IM_ASSERT(ret);
 }
 
 CreditsScreen::~CreditsScreen()
@@ -70,7 +70,7 @@ void CreditsScreen::drawUI()
 	ImGui::Text("Developer: Roi Tristan A. Nanawa");
 	ImGui::NewLine();
 
-    ImGui::Image((void*)this->imageTexture, ImVec2(140, 160));
+    //ImGui::Image((void*)this->imageTexture, ImVec2(140, 160));
 	
 	ImGui::Text("Acknwledgements:");
 	ImGui::Text("PardCode");

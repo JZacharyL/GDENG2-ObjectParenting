@@ -2,8 +2,25 @@
 #include <string>
 #include "Vector3D.h"
 #include "Matrix4x4.h"
+#include <iostream>
 
 using namespace std;
+
+struct vertex
+{
+	Vector3D position;
+	Vector3D color;
+	Vector3D color1;
+};
+
+__declspec(align(16))
+struct constant
+{
+	Matrix4x4 m_world;
+	Matrix4x4 m_view;
+	Matrix4x4 m_projection;
+	double m_time;
+};
 
 class VertexShader;
 class PixelShader;
@@ -30,25 +47,22 @@ public:
 	Vector3D getLocalRotation();
 
 	string getName();
+	void setName(string newName);
 
-	struct vertex
-	{
-		Vector3D position;
-		Vector3D color;
-		Vector3D color1;
-	};
+	bool isEnabled();
+	void setEnabled(bool state);
 
-	__declspec(align(16))
-	struct constant
-	{
-		Matrix4x4 m_world;
-		Matrix4x4 m_view;
-		Matrix4x4 m_projection;
-		double m_time;
-	};
+	bool isChild();
+	AGameObject* getParent();
+	void setParent(AGameObject* newParent);
+	void unsetParent();
 
 protected:
+	bool hasParent;
+	AGameObject* Parent;
+
 	string name;
+	bool enabled = true;
 	Vector3D localPosition;
 	Vector3D localScale;
 	Vector3D localRotation = Vector3D::zeros();

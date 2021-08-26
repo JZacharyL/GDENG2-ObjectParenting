@@ -1,6 +1,8 @@
 #include "MenuScreen.h"
 #include "UIManager.h"
 #include "CreditsScreen.h"
+#include "GameObjectManager.h"
+#include "VertexShader.h"
 
 MenuScreen::MenuScreen() : AUIScreen("MenuScreen")
 {
@@ -96,6 +98,24 @@ void MenuScreen::drawUI()
             }
 			ImGui::EndMenu();
 		}
+        else if (ImGui::BeginMenu("Primitives")) {
+            if (ImGui::MenuItem("Cube"))
+            {
+                //Create holder variables for data
+                void* shaderByteCode = nullptr;
+                size_t sizeShader = 0;
+                GraphicsEngine* graphEngine = GraphicsEngine::get();
+                graphEngine->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shaderByteCode, &sizeShader);
+                VertexShader* vertexShader = graphEngine->createVertexShader(shaderByteCode, sizeShader);
+
+                //Call to game object manager
+                GameObjectManager::getInstance()->createObject(PrimitiveType::CUBE, shaderByteCode, sizeShader);
+
+                vertexShader->release();
+            }
+
+            ImGui::EndMenu();
+        }
 		ImGui::EndMainMenuBar();
 	}
 }

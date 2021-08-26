@@ -1,5 +1,5 @@
 
-
+#include "GameObjectManager.h"
 #include "Window.h"
 #include "ImGui/imgui.h"
 
@@ -102,6 +102,7 @@ bool Window::init()
 
 	EngineTime::initialize();
 	UIManager::initialize(m_hwnd);
+	GameObjectManager::initialize();
 	
 
 	//set this flag to true to indicate that the window is initialized and running

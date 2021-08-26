@@ -31,52 +31,44 @@ void Camera::update(float deltaTime)
 	float z = localPos.getZ();
 	float moveSpeed = 1.0f;
 
+	//WASD movement
 	if(InputSystem::get()->isKeyDown('W'))
 	{
 		z += deltaTime * moveSpeed;
 		this->setPosition(x, y, z);
 		this->updateViewMatrix();
 	}
-	else if (InputSystem::get()->isKeyDown('S'))
+	if (InputSystem::get()->isKeyDown('S'))
 	{
 		z -= deltaTime * moveSpeed;
 		this->setPosition(x, y, z);
 		this->updateViewMatrix();
 	}
-	else if (InputSystem::get()->isKeyDown('D'))
+	if (InputSystem::get()->isKeyDown('D'))
 	{
 		x += deltaTime * moveSpeed;
 		this->setPosition(x, y, z);
 		this->updateViewMatrix();
 	}
-	else if (InputSystem::get()->isKeyDown('A'))
+	if (InputSystem::get()->isKeyDown('A'))
 	{
 		x -= deltaTime * moveSpeed;
 		this->setPosition(x, y, z);
 		this->updateViewMatrix();
 	}
-	else if (InputSystem::get()->isKeyDown('Q'))
+
+	//Move across y axis
+	if (InputSystem::get()->isKeyDown('Q'))
 	{
 		y += deltaTime * moveSpeed;
 		this->setPosition(x, y, z);
 		this->updateViewMatrix();
 	}
-	else if (InputSystem::get()->isKeyDown('E'))
+	if (InputSystem::get()->isKeyDown('E'))
 	{
 		y -= deltaTime * moveSpeed;
 		this->setPosition(x, y, z);
 		this->updateViewMatrix();
-	}
-	else if(InputSystem::get()->isKeyDown('C'))
-	{
-		if (this->view == View::Perspective)
-		{
-			this->view = View::Orthographic;
-		}
-		else
-		{
-			this->view = View::Perspective;
-		}
 	}
 }
 
@@ -117,6 +109,16 @@ Matrix4x4 Camera::getViewMatrix()
 
 void Camera::onKeyDown(int key)
 {
+	if (key == 'C') {
+		if (this->view == View::Perspective)
+		{
+			this->view = View::Orthographic;
+		}
+		else
+		{
+			this->view = View::Perspective;
+		}
+	}
 }
 
 void Camera::onKeyUp(int key)
@@ -125,19 +127,31 @@ void Camera::onKeyUp(int key)
 
 void Camera::onMouseMove(const Point& deltaMousePos)
 {
+	InputSystem::get()->ShowCursor(true);
+	//If mouse is down
 	if (this->mouseDown) {
+		InputSystem::get()->ShowCursor(false);
+		//Get local values of camera
 		Vector3D localRot = this->getLocalRotation();
 		float x = localRot.getX();
 		float y = localRot.getY();
 		float z = localRot.getZ();
 
-		float speed = 0.01f;
+		//Set pan speed
+		float speed = 0.1f;
 
+		//Get displacement from difference of X and Y rotations
 		x += (deltaMousePos.y - (this->height / 2.0f)) * EngineTime::getDeltaTime() * speed;
 		y += (deltaMousePos.x - (this->width / 2.0f)) * EngineTime::getDeltaTime() * speed;
 		
+		//Set new rotation based on mouse
 		this->setRotation(x, y, z);
+
+		//Update the view frustrum
 		this->updateViewMatrix();
+
+		//Re-center mouse
+		InputSystem::get()->setCursorPosition(Point(width / 2.0f, height / 2.0f));
 	}
 }
 
@@ -152,10 +166,12 @@ void Camera::onLeftMouseUp(const Point& deltaMousePos)
 
 void Camera::onRightMouseDown(const Point& deltaMousePos)
 {
+	//InputSystem::get()->ShowCursor(false);
 	this->mouseDown = true;
 }
 
 void Camera::onRightMouseUp(const Point& deltaMousePos)
 {
+	//InputSystem::get()->ShowCursor(true);
 	this->mouseDown = false;
 }

@@ -3,6 +3,8 @@
 #include "InputListener.h"
 #include <Windows.h>
 
+
+
 class Camera : public AGameObject, public InputListener
 {
 public:

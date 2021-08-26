@@ -22,7 +22,6 @@ public:
 	~AppWindow();
 
 	void initialize();
-	void updateQuadPosition();
 
 	// Inherited via Window
 	virtual void onCreate() override;

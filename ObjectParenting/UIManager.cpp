@@ -2,6 +2,8 @@
 #include "GraphicsEngine.h"
 #include "ProfilerScreen.h"
 #include "MenuScreen.h"
+#include "HierarchyScreen.h"
+#include "Inspector.h"
 
 UIManager* UIManager::sharedInstance = NULL;\
 
@@ -82,6 +84,14 @@ UIManager::UIManager(HWND windowHandle)
 	MenuScreen* menuScreen = new MenuScreen();
 	this->uTable[uiNames.MENU_SCREEN] = menuScreen;
 	this->uList.push_back(menuScreen);
+
+	HierarchyScreen* hierarchy = new HierarchyScreen();
+	this->uTable[uiNames.HIERARCHY_SCREEN] = hierarchy;
+	this->uList.push_back(hierarchy);
+
+	Inspector* inspector = new Inspector();
+	this->uTable[uiNames.INSPECTOR_SCREEN] = inspector;
+	this->uList.push_back(inspector);
 }
 
 UIManager::~UIManager()

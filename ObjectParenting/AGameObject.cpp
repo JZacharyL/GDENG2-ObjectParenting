@@ -118,7 +118,7 @@ Vector3D AGameObject::getLocalScale()
 	return this->localScale;
 }
 
-//Done after 17 hours
+//Done after 17 hours ... now 20
 void AGameObject::setRotation(float x, float y, float z)
 {
 	Vector3D oldRot = localRotation;
@@ -130,6 +130,8 @@ void AGameObject::setRotation(float x, float y, float z)
 
 	//For all childs
 	for (AGameObject* child : ChildList) {
+		Vector3D savedPos = localPosition;
+		setPosition(Vector3D(0, 0, 0));
 		//totalRotation = Quaternion(localRotation, )
 
 		//Ensure the rotation accounts for every axis (x, y, and z)
@@ -150,12 +152,16 @@ void AGameObject::setRotation(float x, float y, float z)
 		cout << totalRotation.w << endl;
 		*/
 
+		//Get the difference from the origin
+		//Account for distance from origin
+		//Vector3D objectDiff = child->getLocalPosition() - localPosition;
 		Vector3D initialPosition;
 		Vector3D newPosition;
 
 		//Detect which axis the rotation was done over
 		if (rotDiff.x != 0) {
 			Quaternion xRot = Quaternion(Vector3D(1, localPosition.y, localPosition.z), rotDiff.x);
+
 			//Apply rotated difference to the child position
 			initialPosition = child->getLocalPosition();
 			newPosition = Quaternion::Rotate(&initialPosition, xRot);
@@ -198,11 +204,13 @@ void AGameObject::setRotation(float x, float y, float z)
 
 		//cout << "Rotating" << endl;
 
-		//Finally, rotate the child by the same rotation difference
-		child->setRotation(rotDiff + child->getLocalRotation());
+		setPosition(savedPos);
 
 		//Set the new position first
 		child->setPosition(newPosition);
+
+		//Finally, rotate the child by the same rotation difference
+		child->setRotation(rotDiff + child->getLocalRotation());
 	}
 }
 
@@ -242,7 +250,8 @@ void AGameObject::setRotation(Vector3D rot)
 	//For all childs
 	for (AGameObject* child : ChildList) {
 		//totalRotation = Quaternion(localRotation, )
-		
+		Vector3D savedPos = localPosition;
+		setPosition(Vector3D(0, 0, 0));
 		//Ensure the rotation accounts for every axis (x, y, and z)
 		//Thankfully, there's no double rotations
 		//Account for Rotation AROUND the x axis
@@ -312,6 +321,8 @@ void AGameObject::setRotation(Vector3D rot)
 		//Set the new position first
 		child->setPosition(newPosition);
 		
+		setPosition(savedPos);
+
 		//child->setRotation(newPosition);
 		//Finally, rotate the child by the same rotation difference
 		child->setRotation(rotDiff + child->getLocalRotation());

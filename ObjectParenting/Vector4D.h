@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector3D.h"
+#include <math.h>
 
 class Vector4D
 {
@@ -44,6 +45,14 @@ public:
 		v.w = 1;
 
 		return v;
+	}
+
+	//Abstract this to Vector4D --> Done
+	float getLength() {
+		//Full distance formula across all axes
+		float dist = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2) + pow(w, 2));
+
+		return dist;
 	}
 
 	void cross(Vector4D& v1, Vector4D& v2, Vector4D& v3)

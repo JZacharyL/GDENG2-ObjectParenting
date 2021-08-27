@@ -93,6 +93,19 @@ public:
 		return det;
 	}
 
+	//THIS FUNCTION CHANGES THE MATRIX IT IS USED BY
+	void SetRotationMatrixByQuaternion(Vector3D forward, Vector3D up, Vector3D right) {
+		//This is needed trust me
+		Vector3D f = forward;
+		Vector3D r = right;
+		Vector3D u = up;
+
+		mat[0][0] = r.getX();		mat[0][1] = r.getY();		mat[0][2] = r.getZ();		mat[0][3] = 0;
+		mat[1][0] = u.getX();		mat[1][1] = u.getY();		mat[1][2] = u.getZ();		mat[1][3] = 0;
+		mat[2][0] = f.getX();		mat[2][1] = f.getY();		mat[2][2] = f.getZ();		mat[2][3] = 0;
+		mat[3][0] = 0;				mat[3][1] = 0;				mat[3][2] = 0;				mat[0][3] = 1; //Never set that to 0
+	}
+
 	void inverse()
 	{
 		int a, i, j;
@@ -137,12 +150,6 @@ public:
 		return Vector3D(mat[2][0], mat[2][1], mat[2][2]);
 	}
 
-	Vector3D getYDirection()
-	{
-		return Vector3D(mat[1][0], mat[1][1], mat[1][2]);
-	}
-
-	
 	Vector3D getXDirection()
 	{
 		return Vector3D(mat[0][0], mat[0][1], mat[0][2]);

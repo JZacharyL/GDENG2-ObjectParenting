@@ -2,6 +2,7 @@
 #include <string>
 #include "Vector3D.h"
 #include "Matrix4x4.h"
+#include "Quaternion.h"
 #include <iostream>
 #include <vector>
 

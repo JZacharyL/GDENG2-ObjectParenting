@@ -129,46 +129,73 @@ void AGameObject::setRotation(Vector3D rot)
 	//Account for parent object
 	Vector3D oldRot = localRotation;
 	this->localRotation = rot;
-	Vector3D rotDiff = localRotation - oldRot;//angles
+	Vector3D rotDiff = localRotation - oldRot;
 	
 	
 	//For all childs
 	for (AGameObject* child : ChildList) {
-		
-		Vector3D mag = child->localPosition - this->localPosition;//magnitude
-		
-		Vector3D revDiff = Vector3D(mag.x * cos(localRotation.x),mag.y * sin(localRotation.y),0); //get x component and y component
-		//sqrtf((mag.x + mag.y + mag.z));
 
-		Matrix4x4 finalRotation;
-		finalRotation.setIdentity();
-		Matrix4x4 temp;
-		temp.setIdentity();
-		
-		
-		temp.setRotationX(revDiff.getX());
-		finalRotation *= temp;
+		//Create A Quaternion to represent the parents rotation
+		Quaternion totalRotation;
 
-		temp.setIdentity();
-		temp.setRotationY(revDiff.getY());
-		finalRotation *= temp;
+		//totalRotation = Quaternion(localRotation, )
+		
+		//Ensure the rotation accounts for every axis (x, y, and z)
+		//Thankfully, there's no double rotations
+		//Account for Rotation AROUND the x axis
+
+		/*
+		Quaternion xRot = Quaternion(Vector3D(1, 0, 0), localRotation.x);
+		totalRotation *= xRot;
 
 		
-		//temp.setIdentity();
-		//temp.setRotationZ(revDiff.getZ());
-		//finalRotation *= temp;
-		Vector3D getDisplacementX;
-		Vector3D getDisplacementY;
-		Vector3D dir = Vector3D(0, 0, 0);
-		getDisplacementX = finalRotation.getXDirection();
-		getDisplacementY = finalRotation.getYDirection();
+		cout << totalRotation.w << endl;
 
-		dir = getDisplacementX + getDisplacementY;
-		//float angle = atan2(pow(revDiff.x,2), pow(revDiff.y, 2));
-		child->setRotation(rotDiff + child->getLocalRotation()); //do not touch
+		//Account for Rotation around the y axis
+		Quaternion yRot = Quaternion(Vector3D(0, 1, 0), localRotation.y);
+		totalRotation *= yRot;
 
-		//Set Position
-		//child->setPosition(dir);
+		cout << totalRotation.w << endl;
+		*/
+
+		//Account for Rotation around the z axis
+		Quaternion zRot = Quaternion(localPosition, localRotation.z);
+		totalRotation *= zRot;
+
+		cout << totalRotation.w << endl;
+		
+
+		/*
+		Vector3D dir;
+		Vector3D revDiff;
+
+		//Get the distance from the parent to the child
+		Vector3D mag = child->localPosition - localPosition;
+		
+		//Get the angle coefficients on each axis of rotation
+		//Around the z axis
+		float angleX = cos(rotDiff.x);
+		float angleY = sin(rotDiff.y);
+
+		Vector3D finalDisp = mag;
+		finalDisp.x = finalDisp.x * angleX;
+		finalDisp.y = finalDisp.y * angleY;
+
+		child->setPosition(finalDisp);
+		*/
+
+		//Apply rotated difference to the child position
+		Vector3D initialPosition = child->getLocalPosition();
+		Vector3D newPosition = Quaternion::Rotate(&initialPosition, totalRotation);
+
+		cout << "Rotating" << endl;
+
+		//Set the new position first
+		child->setPosition(newPosition);
+		
+		//child->setRotation(newPosition);
+		//Finally, rotate the child by the same rotation difference
+		child->setRotation(rotDiff + child->getLocalRotation());
 	}
 }
 

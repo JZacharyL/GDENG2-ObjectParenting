@@ -29,7 +29,7 @@ void Camera::update(float deltaTime)
 	float x = localPos.getX();
 	float y = localPos.getY();
 	float z = localPos.getZ();
-	float moveSpeed = 2.0f;
+	float moveSpeed = 1.0f;
 
 	//WASD movement
 	if(InputSystem::get()->isKeyDown('W'))
@@ -86,7 +86,6 @@ void Camera::updateViewMatrix()
 	temp.setRotationX(localRot.getX());
 	worldCam = worldCam.multiplyTo(temp);
 
-	temp.setIdentity();
 	temp.setRotationY(localRot.getY());
 	worldCam = worldCam.multiplyTo(temp);
 
@@ -130,10 +129,10 @@ void Camera::onKeyUp(int key)
 
 void Camera::onMouseMove(const Point& deltaMousePos)
 {
-	//InputSystem::get()->ShowCursor(true);
+	InputSystem::get()->ShowCursor(true);
 	//If mouse is down
 	if (this->mouseDown) {
-		//InputSystem::get()->ShowCursor(false);
+		InputSystem::get()->ShowCursor(false);
 		//Get local values of camera
 		Vector3D localRot = this->getLocalRotation();
 		float x = localRot.getX();
@@ -169,12 +168,12 @@ void Camera::onLeftMouseUp(const Point& deltaMousePos)
 
 void Camera::onRightMouseDown(const Point& deltaMousePos)
 {
-	InputSystem::get()->ShowCursor(false);
+	//InputSystem::get()->ShowCursor(false);
 	this->mouseDown = true;
 }
 
 void Camera::onRightMouseUp(const Point& deltaMousePos)
 {
-	InputSystem::get()->ShowCursor(true);
+	//InputSystem::get()->ShowCursor(true);
 	this->mouseDown = false;
 }

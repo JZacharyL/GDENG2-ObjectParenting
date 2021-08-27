@@ -27,9 +27,23 @@ void Inspector::drawUI()
 		this->updateTransformDisplays();
 		bool enabled = this->selectedObject->isEnabled();
 		if (ImGui::Checkbox("Enabled", &enabled)) { this->selectedObject->setEnabled(enabled); }
-		if (ImGui::InputFloat3("Position", this->positionDisplay, 4)) { this->onTransformUpdate(); }
-		if (ImGui::InputFloat3("Rotation", this->rotationDisplay, 4)) { this->onTransformUpdate(); }
-		if (ImGui::InputFloat3("Scale", this->scaleDisplay, 4)) { this->onTransformUpdate(); }
+		if (ImGui::InputFloat3("Position", this->positionDisplay, 4));
+
+		if (ImGui::IsItemDeactivatedAfterEdit()) {
+			this->onTransformUpdate();
+		}
+
+		if (ImGui::InputFloat3("Rotation", this->rotationDisplay, 4));
+
+		if (ImGui::IsItemDeactivatedAfterEdit()) {
+			this->onTransformUpdate();
+		}
+
+		if (ImGui::InputFloat3("Scale", this->scaleDisplay, 4));
+
+		if (ImGui::IsItemDeactivatedAfterEdit()) {
+			this->onTransformUpdate();
+		}
 		
 		//Parent child UI
 		string parentTitle;

@@ -137,6 +137,12 @@ public:
 		return Vector3D(mat[2][0], mat[2][1], mat[2][2]);
 	}
 
+	Vector3D getYDirection()
+	{
+		return Vector3D(mat[1][0], mat[1][1], mat[1][2]);
+	}
+
+	
 	Vector3D getXDirection()
 	{
 		return Vector3D(mat[0][0], mat[0][1], mat[0][2]);

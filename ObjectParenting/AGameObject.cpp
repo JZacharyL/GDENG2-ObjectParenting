@@ -134,16 +134,41 @@ void AGameObject::setRotation(Vector3D rot)
 	
 	//For all childs
 	for (AGameObject* child : ChildList) {
-		Vector3D dir;
-		Vector3D mag = localPosition - child->localPosition;//magnitude
-
-		Vector3D revDiff = Vector3D(cos(rotDiff.x),sin(rotDiff.y),0.0f); //get x component and y component
-
-		float angle = atan2(mag.getY(), mag.getX());
 		
-		//dir = revDiff * mag
-		//child->setPosition(dir)?
-		child->setRotation(rotDiff + child->getLocalRotation());
+		Vector3D mag = child->localPosition - this->localPosition;//magnitude
+		
+		Vector3D revDiff = Vector3D(mag.x * cos(localRotation.x),mag.y * sin(localRotation.y),0); //get x component and y component
+		//sqrtf((mag.x + mag.y + mag.z));
+
+		Matrix4x4 finalRotation;
+		finalRotation.setIdentity();
+		Matrix4x4 temp;
+		temp.setIdentity();
+		
+		
+		temp.setRotationX(revDiff.getX());
+		finalRotation *= temp;
+
+		temp.setIdentity();
+		temp.setRotationY(revDiff.getY());
+		finalRotation *= temp;
+
+		
+		//temp.setIdentity();
+		//temp.setRotationZ(revDiff.getZ());
+		//finalRotation *= temp;
+		Vector3D getDisplacementX;
+		Vector3D getDisplacementY;
+		Vector3D dir = Vector3D(0, 0, 0);
+		getDisplacementX = finalRotation.getXDirection();
+		getDisplacementY = finalRotation.getYDirection();
+
+		dir = getDisplacementX + getDisplacementY;
+		//float angle = atan2(pow(revDiff.x,2), pow(revDiff.y, 2));
+		child->setRotation(rotDiff + child->getLocalRotation()); //do not touch
+
+		//Set Position
+		//child->setPosition(dir);
 	}
 }
 

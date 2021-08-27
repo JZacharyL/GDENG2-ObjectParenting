@@ -30,19 +30,19 @@ void Inspector::drawUI()
 		if (ImGui::InputFloat3("Position", this->positionDisplay, 4));
 
 		if (ImGui::IsItemDeactivatedAfterEdit()) {
-			this->onTransformUpdate();
+			this->onTranslateUpdate();
 		}
 
 		if (ImGui::InputFloat3("Rotation", this->rotationDisplay, 4));
 
 		if (ImGui::IsItemDeactivatedAfterEdit()) {
-			this->onTransformUpdate();
+			this->onRotateUpdate();
 		}
 
 		if (ImGui::InputFloat3("Scale", this->scaleDisplay, 4));
 
 		if (ImGui::IsItemDeactivatedAfterEdit()) {
-			this->onTransformUpdate();
+			this->onScaleUpdate();
 		}
 		
 		//Parent child UI
@@ -94,9 +94,9 @@ void Inspector::updateTransformDisplays()
 	this->positionDisplay[2] = pos.getZ();
 
 	Vector3D rot = this->selectedObject->getLocalRotation();
-	this->rotationDisplay[0] = rot.getX();
-	this->rotationDisplay[1] = rot.getY();
-	this->rotationDisplay[2] = rot.getZ();
+	this->rotationDisplay[0] = rot.getX() / 0.0174533;
+	this->rotationDisplay[1] = rot.getY() / 0.0174533;
+	this->rotationDisplay[2] = rot.getZ() / 0.0174533;
 
 	Vector3D scale = this->selectedObject->getLocalScale();
 	this->scaleDisplay[0] = scale.getX();
@@ -110,7 +110,9 @@ void Inspector::updateTransformDisplays()
 void Inspector::onTransformUpdate()
 {
 	if (this->selectedObject != NULL) {
-		this->selectedObject->setPosition(Vector3D(this->positionDisplay[0], this->positionDisplay[1], this->positionDisplay[2]));
+		this->selectedObject->setScale(Vector3D(this->scaleDisplay[0], this->scaleDisplay[1], this->scaleDisplay[2]));
+
+		//* 0.0174533
 
 		float rotX = this->rotationDisplay[0] * 0.0174533;
 		float rotY = this->rotationDisplay[1] * 0.0174533;
@@ -118,7 +120,33 @@ void Inspector::onTransformUpdate()
 
 		this->selectedObject->setRotation(Vector3D(rotX, rotY, rotZ));
 
+		this->selectedObject->setPosition(Vector3D(this->positionDisplay[0], this->positionDisplay[1], this->positionDisplay[2]));
+	}
+}
 
+void Inspector::onTranslateUpdate()
+{
+	if (this->selectedObject != NULL) {
+		this->selectedObject->setPosition(Vector3D(this->positionDisplay[0], this->positionDisplay[1], this->positionDisplay[2]));
+	}
+}
+
+void Inspector::onRotateUpdate()
+{
+	if (this->selectedObject != NULL) {
+		//* 0.0174533
+
+		float rotX = this->rotationDisplay[0] * 0.0174533;
+		float rotY = this->rotationDisplay[1] * 0.0174533;
+		float rotZ = this->rotationDisplay[2] * 0.0174533;
+
+		this->selectedObject->setRotation(Vector3D(rotX, rotY, rotZ));
+	}
+}
+
+void Inspector::onScaleUpdate()
+{
+	if (this->selectedObject != NULL) {
 		this->selectedObject->setScale(Vector3D(this->scaleDisplay[0], this->scaleDisplay[1], this->scaleDisplay[2]));
 	}
 }

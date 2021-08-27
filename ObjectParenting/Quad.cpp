@@ -149,7 +149,7 @@ void Quad::draw(int width, int height, VertexShader* vertexShader, PixelShader* 
 		cc.m_projection.setOrthoLH(width / 400.0f, height / 400.0f, -4.0f, 4.0f);
 
 
-	cc.m_time = ::GetTickCount() / 1000.0f;
+	cc.m_time = EngineTime::getDeltaTime();
 
 	this->constantBuffer->update(deviceContext, &cc);
 	deviceContext->setConstantBuffer(vertexShader, this->constantBuffer);

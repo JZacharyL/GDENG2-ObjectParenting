@@ -9,6 +9,11 @@ private:
 	~Inspector();
 
 	void onTransformUpdate();
+	
+	void onTranslateUpdate();
+	void onRotateUpdate();
+	void onScaleUpdate();
+
 	virtual void drawUI() override;
 	void updateTransformDisplays();
 	friend class UIManager;

@@ -59,6 +59,7 @@ public:
 
 	//Give new rotated position by quaternion
 	static Vector3D Rotate(Vector3D* base, Quaternion rotate) {
+		
 		Vector3D newVector((rotate.y * base->z) - (rotate.z * base->y), (rotate.z * base->x) - (rotate.x * base->z), (rotate.x * base->y) - (rotate.y * base->x));
 
 		Vector3D FinalVector((rotate.y * newVector.z) - (rotate.z * newVector.y), (rotate.z * newVector.x) - (rotate.x * newVector.z), (rotate.x * newVector.y) - (rotate.y * newVector.x));
@@ -68,6 +69,16 @@ public:
 		Vector3D FinalDisplacement = rebase + (newVector * (2 * rotate.w) + FinalVector * 2);
 
 		return FinalDisplacement;
+		
+		/*
+		Quaternion conjugate = Quaternion::Conjugate(rotate);
+
+		Quaternion finalRotation = rotate * base;
+
+		finalRotation = finalRotation * conjugate;
+
+		return Vector3D(finalRotation.x, finalRotation.y, finalRotation.z);
+		*/
 	}
 
 	//Mutiply by ...

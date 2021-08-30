@@ -1,8 +1,14 @@
 #include "Plane.h"
 #include "SceneCameraHandler.h"
+#include "ShaderLibrary.h"
 
-Plane::Plane(string name, void* shaderByteCode, size_t sizeShader) : AGameObject(name)
+Plane::Plane(string name) : AGameObject(name)
 {
+	ShaderNames shaderNames;
+	void* shaderByteCode = NULL;
+	size_t sizeShader = 0;
+	ShaderLibrary::getInstance()->requestVertexShaderData(shaderNames.BASE_VERTEX_SHADER_NAME, &shaderByteCode, &sizeShader);
+	
 	vertex vertex_list[] =
 	{
 		{Vector3D(-0.25f,-0.01f,-0.25f),	Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS1
@@ -90,11 +96,12 @@ void Plane::update(float deltaTime)
 	*/
 }
 
-void Plane::draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader)
+void Plane::draw(int width, int height)
 {
+	ShaderNames shaderNames;
 	GraphicsEngine* graphicsEngine = GraphicsEngine::get();
 	DeviceContext* deviceContext = graphicsEngine->getImmediateDeviceContext();
-
+	deviceContext->setRenderConfig(ShaderLibrary::getInstance()->getVertexShader(shaderNames.BASE_VERTEX_SHADER_NAME), ShaderLibrary::getInstance()->getPixelShader(shaderNames.BASE_PIXEL_SHADER_NAME));
 	constant cc;
 
 	if (this->deltaPos > 1.0f)
@@ -132,11 +139,11 @@ void Plane::draw(int width, int height, VertexShader* vertexShader, PixelShader*
 	cc.m_time = ::GetTickCount() / 1000.0f;
 
 	this->constantBuffer->update(deviceContext, &cc);
-	deviceContext->setConstantBuffer(vertexShader, this->constantBuffer);
-	deviceContext->setConstantBuffer(pixelShader, this->constantBuffer);
+	deviceContext->setConstantBuffer(ShaderLibrary::getInstance()->getVertexShader(shaderNames.BASE_VERTEX_SHADER_NAME), this->constantBuffer);
+	deviceContext->setConstantBuffer(ShaderLibrary::getInstance()->getPixelShader(shaderNames.BASE_PIXEL_SHADER_NAME), this->constantBuffer);
 
-	deviceContext->setVertexShader(vertexShader);
-	deviceContext->setPixelShader(pixelShader);
+	deviceContext->setVertexShader(ShaderLibrary::getInstance()->getVertexShader(shaderNames.BASE_VERTEX_SHADER_NAME));
+	deviceContext->setPixelShader(ShaderLibrary::getInstance()->getPixelShader(shaderNames.BASE_PIXEL_SHADER_NAME));
 
 	deviceContext->setIndexBuffer(this->indexBuffer);
 	deviceContext->setVertexBuffer(this->vertexBuffer);

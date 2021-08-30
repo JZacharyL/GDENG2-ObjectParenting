@@ -11,7 +11,7 @@ class ConstantBuffer;
 class VertexShader;
 class PixelShader;
 class Quad;
-
+class TexturedVertexBuffer;
 class GraphicsEngine
 {
 public:
@@ -29,6 +29,7 @@ public:
 	ConstantBuffer* createConstantBuffer();
 	VertexShader* createVertexShader(const void* shader_byte_code, size_t byte_code_size);
 	PixelShader* createPixelShader(const void* shader_byte_code, size_t byte_code_size);
+	TexturedVertexBuffer* createTexturedBuffer();
 	
 public:
 	bool compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size);
@@ -72,8 +73,10 @@ private:
 	friend class VertexBuffer;
 	friend class IndexBuffer;
 	friend class ConstantBuffer;
+	friend class TexturedVertexBuffer;
 	friend class VertexShader;
 	friend class PixelShader;
 	friend class Quad;
+	friend class ShaderLibary;
 };
 

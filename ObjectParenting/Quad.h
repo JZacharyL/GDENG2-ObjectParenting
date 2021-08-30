@@ -14,18 +14,19 @@
 class Quad : public AGameObject
 {
 public:
-	Quad(string name, void* shaderByteCode, size_t sizeShader);
+	Quad(string name);
 	~Quad();
 	
 	void update(float deltaTime) override;
-	void draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader) override;
+	void draw(int width, int height) override;
 
 	void setAnimSpeed(float speed);
 
-private:
 	VertexBuffer* vertexBuffer;
 	IndexBuffer* indexBuffer;
 	ConstantBuffer* constantBuffer;
+private:
+	
 
 	float ticks = 0.0f;
 	float deltaPos = 0.0f;

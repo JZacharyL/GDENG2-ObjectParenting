@@ -10,11 +10,11 @@ cbuffer constant: register(b0)
 	row_major float4x4 m_world;
 	row_major float4x4 m_view;
 	row_major float4x4 m_projection;
-	double m_time;
+	float m_time;
 }
 
 
-float4 psmain(PS_INPUT input) : SV_TARGET
+float4 vsmain(PS_INPUT input) : SV_TARGET
 {
 	return float4(lerp(input.color, input.color1, (sin(m_time) / 2.0f)), 1.0f);
 }

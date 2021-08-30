@@ -3,7 +3,7 @@
 #include "CreditsScreen.h"
 #include "GameObjectManager.h"
 #include "VertexShader.h"
-
+#include "ShaderLibrary.h"
 MenuScreen::MenuScreen() : AUIScreen("MenuScreen")
 {
 }
@@ -101,19 +101,23 @@ void MenuScreen::drawUI()
         else if (ImGui::BeginMenu("Primitives")) {
             if (ImGui::MenuItem("Cube"))
             {
-                //Create holder variables for data
-                void* shaderByteCode = nullptr;
-                size_t sizeShader = 0;
-                GraphicsEngine* graphEngine = GraphicsEngine::get();
-                graphEngine->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shaderByteCode, &sizeShader);
-                VertexShader* vertexShader = graphEngine->createVertexShader(shaderByteCode, sizeShader);
+              
 
                 //Call to game object manager
-                GameObjectManager::getInstance()->createObject(PrimitiveType::CUBE, shaderByteCode, sizeShader);
+                GameObjectManager::getInstance()->createObject(PrimitiveType::CUBE);
 
-                vertexShader->release();
+              
             }
 
+            if (ImGui::MenuItem("TexturedCube"))
+            {
+
+
+                //Call to game object manager
+                GameObjectManager::getInstance()->createObject(PrimitiveType::TEXTURED_CUBE);
+
+
+            }
             ImGui::EndMenu();
         }
 		ImGui::EndMainMenuBar();

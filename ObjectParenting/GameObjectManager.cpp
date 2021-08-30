@@ -3,6 +3,7 @@
 #include "EngineTime.h"
 #include "Quad.h"
 #include "Plane.h"
+#include "TexturedCube.h"
 #include "AGameObject.h"
 
 GameObjectManager* GameObjectManager::sharedInstance = NULL;
@@ -63,12 +64,12 @@ void GameObjectManager::updateAll()
 	}
 }
 
-void GameObjectManager::renderAll(int viewportWidth, int viewportHeight, VertexShader* vertexShader, PixelShader* pixelShader)
+void GameObjectManager::renderAll(int viewportWidth, int viewportHeight)
 {
 	for (int i = 0; i < this->gameObjectList.size(); i++) {
 		//replace with component update
 		if (this->gameObjectList[i]->isEnabled()) {
-			this->gameObjectList[i]->draw(viewportWidth, viewportHeight, vertexShader, pixelShader);
+			this->gameObjectList[i]->draw(viewportWidth, viewportHeight);
 		}
 	}
 }
@@ -94,12 +95,12 @@ void GameObjectManager::addObject(AGameObject* gameObject)
 	this->gameObjectList.push_back(gameObject);
 }
 
-void GameObjectManager::createObject(PrimitiveType type, void* shaderByteCode, size_t sizeShader)
+void GameObjectManager::createObject(PrimitiveType type)
 {
 	cout << "Object generation call received" << endl;
 	if (type == PrimitiveType::CUBE) {
 		cout << "Cube creation order parsed" << endl;
-		Quad* cube = new Quad("Cube", shaderByteCode, sizeShader);
+		Quad* cube = new Quad("Cube");
 		cube->setPosition(0.0f, 0.0f, 0.0f);
 		cube->setScale(1.0f, 1.0f, 1.0f);
 		this->addObject(cube);
@@ -107,8 +108,14 @@ void GameObjectManager::createObject(PrimitiveType type, void* shaderByteCode, s
 
 	if (type == PrimitiveType::PLANE) {
 		cout << "Plane creation order parsed" << endl;
-		Plane* plane = new Plane("Plane", shaderByteCode, sizeShader);
+		Plane* plane = new Plane("Plane");
 		this->addObject(plane);
+	}
+
+	if (type == PrimitiveType::TEXTURED_CUBE) {
+		cout << "Plane creation order parsed" << endl;
+		TexturedCube* tex_Cube = new TexturedCube("TexturedCube1");
+		this->addObject(tex_Cube);
 	}
 }
 

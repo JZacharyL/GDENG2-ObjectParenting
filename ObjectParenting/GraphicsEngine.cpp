@@ -7,8 +7,9 @@
 #include "ConstantBuffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
-
+#include "TexturedVertexBuffer.h"
 #include <d3dcompiler.h>
+#include <iostream>
 
 GraphicsEngine* GraphicsEngine::SharedInstance = nullptr;
 GraphicsEngine::GraphicsEngine()
@@ -105,12 +106,19 @@ ConstantBuffer* GraphicsEngine::createConstantBuffer()
 	return new ConstantBuffer();
 }
 
+TexturedVertexBuffer* GraphicsEngine::createTexturedBuffer()
+{
+	return new TexturedVertexBuffer();
+}
+
+
 VertexShader* GraphicsEngine::createVertexShader(const void* shader_byte_code, size_t byte_code_size)
 {
 	VertexShader* vs = new VertexShader();
 
 	if(!vs->init(shader_byte_code, byte_code_size))
 	{
+		std::cout << "vs init failed!!" << std::endl;
 		vs->release();
 		return nullptr;
 	}
@@ -130,6 +138,7 @@ PixelShader* GraphicsEngine::createPixelShader(const void* shader_byte_code, siz
 
 	return ps;
 }
+
 
 bool GraphicsEngine::compileVertexShader(const wchar_t* file_name, const char* entry_point_name, void** shader_byte_code, size_t* byte_code_size)
 {

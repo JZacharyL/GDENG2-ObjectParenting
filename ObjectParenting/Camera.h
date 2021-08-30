@@ -19,7 +19,7 @@ public:
 
 	void initialize(RECT window);
 	void update(float deltaTime) override;
-	void draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader) override;
+	void draw(int width, int height) override;
 	void updateViewMatrix();
 	View getView();
 	Matrix4x4 getViewMatrix();

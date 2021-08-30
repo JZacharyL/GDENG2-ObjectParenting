@@ -1,19 +1,25 @@
 #include "Quad.h"
 #include "SceneCameraHandler.h"
-
-Quad::Quad(string name, void* shaderByteCode, size_t sizeShader) : AGameObject(name)
+#include "ShaderLibrary.h"
+Quad::Quad(string name) : AGameObject(name)
 {
+
+	ShaderNames shaderNames;
+	void* shaderByteCode = nullptr;
+	size_t sizeShader = 0;
+	ShaderLibrary::getInstance()->requestVertexShaderData(shaderNames.BASE_VERTEX_SHADER_NAME, &shaderByteCode, &sizeShader);
+	
 	vertex vertex_list[] =
 	{
-		{Vector3D(-0.25f,-0.25f,-0.25f),	Vector3D(1,0,0),		Vector3D(0,1,0)}, // POS1
-		{Vector3D(-0.25f,0.25f,-0.25f),		Vector3D(0,1,0),		Vector3D(0,0,1)}, // POS2
-		{Vector3D(0.25f,0.25f,-0.25f),		Vector3D(0,0,1),		Vector3D(1,0,0)}, // POS3
-		{Vector3D(0.25f,-0.25f,-0.25f),		Vector3D(1,1,0),		Vector3D(0,0,0)},
+		{Vector3D(-0.25f,-0.25f,-0.25f),	Vector3D(0,1,1),		Vector3D(1,1,1)}, // POS1
+		{Vector3D(-0.25f,0.25f,-0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS2
+		{Vector3D(0.25f,0.25f,-0.25f),		Vector3D(0,1,1),		Vector3D(1,1,1)}, // POS3
+		{Vector3D(0.25f,-0.25f,-0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)},
 
-		{Vector3D(0.25f,-0.25f,0.25f),		Vector3D(1,0,0),		Vector3D(0,1,0)}, // POS1
-		{Vector3D(0.25f,0.25f,0.25f),			Vector3D(0,1,0),		Vector3D(0,0,1)}, // POS2
-		{Vector3D(-0.25f,0.25f,0.25f),		Vector3D(0,0,1),		Vector3D(1,0,0)}, // POS3
-		{Vector3D(-0.25f,-0.25f,0.25f),		Vector3D(1,1,0),		Vector3D(0,0,0)},
+		{Vector3D(0.25f,-0.25f,0.25f),		Vector3D(0,1,1),		Vector3D(1,1,1)}, // POS1
+		{Vector3D(0.25f,0.25f,0.25f),			Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS2
+		{Vector3D(-0.25f,0.25f,0.25f),		Vector3D(0,1,1),		Vector3D(1,1,1)}, // POS3
+		{Vector3D(-0.25f,-0.25f,0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)},
 	};
 
 	this->vertexBuffer = GraphicsEngine::get()->createVertexBuffer();
@@ -66,37 +72,18 @@ Quad::~Quad()
 
 void Quad::update(float deltaTime)
 {
-	this->deltaTime = deltaTime;
-	this->ticks += deltaTime;
-	float rotSpeed = this->ticks + this->deltaTime;
-	//this->setRotation(rotSpeed, rotSpeed, rotSpeed);
-	//this->setRotation(this->getLocalRotation().x, rotSpeed, this->getLocalRotation().z);
 	
-	/*
-	GraphicsEngine::get()->getImmediateDeviceContext()->setConstantBuffer(m_vs, m_cb);
-	GraphicsEngine::get()->getImmediateDeviceContext()->setConstantBuffer(m_ps, m_cb);
-
-	//SET DEFAULT SHADER IN THE GRAPHICS PIPELINE TO BE ABLE TO DRAW
-	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexShader(m_vs);
-	GraphicsEngine::get()->getImmediateDeviceContext()->setPixelShader(m_ps);
-
-	//SET THE VERTICES OF THE TRIANGLE TO DRAW
-	GraphicsEngine::get()->getImmediateDeviceContext()->setVertexBuffer(m_vb);
-	//SET THE INDICES OF THE TRIANGLE TO DRAW
-	GraphicsEngine::get()->getImmediateDeviceContext()->setIndexBuffer(m_ib);
-
-	// FINALLY DRAW THE TRIANGLE
-	GraphicsEngine::get()->getImmediateDeviceContext()->drawIndexedTriangleList(m_ib->getSizeIndexList(), 0, 0);
-	*/
 }
 
-void Quad::draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader)
+void Quad::draw(int width, int height)
 {
+	ShaderNames shaderNames;
 	GraphicsEngine* graphicsEngine = GraphicsEngine::get();
-	DeviceContext* deviceContext = graphicsEngine->getImmediateDeviceContext();
-
 	constant cc;
 
+	DeviceContext* deviceContext = graphicsEngine->getImmediateDeviceContext();
+	deviceContext->setRenderConfig(ShaderLibrary::getInstance()->getVertexShader(shaderNames.BASE_VERTEX_SHADER_NAME), ShaderLibrary::getInstance()->getPixelShader(shaderNames.BASE_PIXEL_SHADER_NAME));
+	
 	if (this->deltaPos > 1.0f)
 		this->deltaPos = 0.0f;
 	
@@ -152,11 +139,11 @@ void Quad::draw(int width, int height, VertexShader* vertexShader, PixelShader* 
 	cc.m_time = EngineTime::getDeltaTime();
 
 	this->constantBuffer->update(deviceContext, &cc);
-	deviceContext->setConstantBuffer(vertexShader, this->constantBuffer);
-	deviceContext->setConstantBuffer(pixelShader, this->constantBuffer);
+	deviceContext->setConstantBuffer(ShaderLibrary::getInstance()->getVertexShader(shaderNames.BASE_VERTEX_SHADER_NAME), this->constantBuffer);
+	deviceContext->setConstantBuffer(ShaderLibrary::getInstance()->getPixelShader(shaderNames.BASE_PIXEL_SHADER_NAME), this->constantBuffer);
 
-	deviceContext->setVertexShader(vertexShader);
-	deviceContext->setPixelShader(pixelShader);
+	deviceContext->setVertexShader(ShaderLibrary::getInstance()->getVertexShader(shaderNames.BASE_VERTEX_SHADER_NAME));
+	deviceContext->setPixelShader(ShaderLibrary::getInstance()->getPixelShader(shaderNames.BASE_PIXEL_SHADER_NAME));
 
 	deviceContext->setIndexBuffer(this->indexBuffer);
 	deviceContext->setVertexBuffer(this->vertexBuffer);

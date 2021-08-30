@@ -14,11 +14,11 @@
 class Plane : public AGameObject
 {
 public:
-	Plane(string name, void* shaderByteCode, size_t sizeShader);
+	Plane(string name);
 	~Plane();
 
 	void update(float deltaTime) override;
-	void draw(int width, int height, VertexShader* vertexShader, PixelShader* pixelShader) override;
+	void draw(int width, int height) override;
 
 	void setAnimSpeed(float speed);
 

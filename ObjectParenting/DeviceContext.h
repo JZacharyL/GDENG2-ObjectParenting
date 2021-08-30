@@ -8,6 +8,7 @@ class IndexBuffer;
 class ConstantBuffer;
 class VertexShader;
 class PixelShader;
+class Texture;
 
 class DeviceContext
 {
@@ -25,6 +26,8 @@ public:
 	void setPixelShader(PixelShader* pixel_shader);
 	void setConstantBuffer(VertexShader* vertex_shader, ConstantBuffer* buffer);
 	void setConstantBuffer(PixelShader* pixel_shader, ConstantBuffer* buffer);
+	void setTexture(Texture* texture);
+	void setRenderConfig(VertexShader* vertexShader, PixelShader* pixelShader);
 	
 	bool release();
 	~DeviceContext();

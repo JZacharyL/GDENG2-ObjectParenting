@@ -4,7 +4,10 @@
 #include "Quad.h"
 #include "Plane.h"
 #include "TexturedCube.h"
+#include "Teapot.h"
+#include "Bunny.h"
 #include "AGameObject.h"
+#include "Armadillo.h"
 
 GameObjectManager* GameObjectManager::sharedInstance = NULL;
 
@@ -113,9 +116,33 @@ void GameObjectManager::createObject(PrimitiveType type)
 	}
 
 	if (type == PrimitiveType::TEXTURED_CUBE) {
-		cout << "Plane creation order parsed" << endl;
+		cout << "Textured Cubecreation order parsed" << endl;
 		TexturedCube* tex_Cube = new TexturedCube("TexturedCube1");
+		tex_Cube->setPosition(0.0f, 0.0f, 0.0f);
+		tex_Cube->setScale(1.0f, 1.0f, 1.0f);
+		
 		this->addObject(tex_Cube);
+	}
+
+	if (type == PrimitiveType::TEAPOT) {
+		cout << "Textured Teapot order parsed" << endl;
+		Teapot* Potter = new Teapot("Teapot");
+		this->addObject(Potter);
+		
+	}
+
+	if (type == PrimitiveType::BUNNY) {
+		cout << "Textured BUNNY order parsed" << endl;
+		Bunny* Pekora = new Bunny("Bunny");
+		cout << "Textured BUNNY order Created" << endl;
+		this->addObject(Pekora);
+
+	}
+	if (type == PrimitiveType::ARMADILLO) {
+		cout << "Textured ARMADILLO order parsed" << endl;
+		Armadillo* Bob = new Armadillo("Armadillo");
+		this->addObject(Bob);
+
 	}
 }
 

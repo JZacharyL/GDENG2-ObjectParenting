@@ -15,7 +15,7 @@ cbuffer constant: register(b0) {
 	float time;
 }
 
-float4 main(PS_INPUT input) : SV_TARGET
+float4 vsmain(PS_INPUT input) : SV_TARGET
 {
-	return Texture.Sample(TextureSampler,input.texcoord);
+	return Texture.Sample(TextureSampler,input.texcoord*0.5);
 }

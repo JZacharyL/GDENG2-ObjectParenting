@@ -5,6 +5,7 @@
 #include "SceneCameraHandler.h"
 #include "GameObjectManager.h"
 #include "TextureManager.h"
+#include "MeshManager.h"
 #include "ShaderLibrary.h"
 
 AppWindow::AppWindow()
@@ -36,7 +37,7 @@ void AppWindow::initialize()
 	*/
 	std::cout << "done creating shaderLibrary" << endl;
 	TextureManager::initialize();
-
+	MeshManager::initialize();
 	
 	camera.setIdentity();
 	camera.setTranslation(Vector3D(0, 0, -2.0f));

@@ -9,7 +9,10 @@ enum PrimitiveType {
 	CUBE,
 	PLANE,
 	SPHERE,
-	TEXTURED_CUBE
+	TEXTURED_CUBE,
+	TEAPOT,
+	BUNNY,
+	ARMADILLO
 };
 
 class GameObjectManager

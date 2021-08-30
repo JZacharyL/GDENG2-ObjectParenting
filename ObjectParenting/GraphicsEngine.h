@@ -2,7 +2,8 @@
 
 #pragma once
 #include <d3d11.h>
-
+#include "MeshManager.h"
+#include "TextureManager.h"
 class SwapChain;
 class DeviceContext;
 class VertexBuffer;
@@ -12,6 +13,9 @@ class VertexShader;
 class PixelShader;
 class Quad;
 class TexturedVertexBuffer;
+
+
+
 class GraphicsEngine
 {
 public:
@@ -41,6 +45,7 @@ public:
 	bool setShaders();
 	void getShaderBufferAndSize(void **bytecode, UINT*size);
 
+	void getVertexMeshLayoutShaderByteCodeAndSize(void** byte_code, size_t* size);
 	ID3D11Device* getDirectXDevice();
 	ID3D11DeviceContext* getContext();
 	
@@ -68,6 +73,9 @@ private:
 	ID3DBlob* m_psblob = nullptr;
 	ID3D11VertexShader* m_vs = nullptr;
 	ID3D11PixelShader* m_ps = nullptr;
+
+	unsigned char m_mesh_layout_byte_code[1024];
+	size_t m_mesh_layout_size = 0;
 private:
 	friend class SwapChain;
 	friend class VertexBuffer;

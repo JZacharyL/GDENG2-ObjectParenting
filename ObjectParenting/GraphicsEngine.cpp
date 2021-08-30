@@ -199,6 +199,12 @@ void GraphicsEngine::getShaderBufferAndSize(void ** bytecode, UINT * size)
 	*size = (UINT)this->m_vsblob->GetBufferSize();
 }
 
+void GraphicsEngine::getVertexMeshLayoutShaderByteCodeAndSize(void** byte_code, size_t* size)
+{
+	*byte_code = m_mesh_layout_byte_code;
+	*size = m_mesh_layout_size;
+}
+
 ID3D11Device* GraphicsEngine::getDirectXDevice()
 {
 	return this->m_d3d_device;

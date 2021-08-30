@@ -101,23 +101,49 @@ void MenuScreen::drawUI()
         else if (ImGui::BeginMenu("Primitives")) {
             if (ImGui::MenuItem("Cube"))
             {
-              
-
                 //Call to game object manager
                 GameObjectManager::getInstance()->createObject(PrimitiveType::CUBE);
-
-              
             }
 
+            if (ImGui::MenuItem("Plane"))
+            {
+                //Call to game object manager
+                GameObjectManager::getInstance()->createObject(PrimitiveType::PLANE);
+
+
+            }
+        	
             if (ImGui::MenuItem("TexturedCube"))
             {
-
-
                 //Call to game object manager
                 GameObjectManager::getInstance()->createObject(PrimitiveType::TEXTURED_CUBE);
 
 
             }
+
+            if (ImGui::MenuItem("Teapot"))
+            {
+                //Call to game object manager
+                GameObjectManager::getInstance()->createObject(PrimitiveType::TEAPOT);
+
+
+            }
+            if (ImGui::MenuItem("Bunny"))
+            {
+                //Call to game object manager
+                GameObjectManager::getInstance()->createObject(PrimitiveType::BUNNY);
+
+
+            }
+        	
+            if (ImGui::MenuItem("Armadillo"))
+            {
+                //Call to game object manager
+                GameObjectManager::getInstance()->createObject(PrimitiveType::ARMADILLO);
+
+
+            }
+
             ImGui::EndMenu();
         }
 		ImGui::EndMainMenuBar();

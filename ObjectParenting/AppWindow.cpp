@@ -28,6 +28,8 @@ void AppWindow::initialize()
 	int height = window.bottom - window.top;
 	
 	std::cout << "creating shaderLibrary" << endl;
+	TextureManager::initialize();
+	MeshManager::initialize();
 	ShaderLibrary::initialize();
 	/*
 	void* shaderByteCode = nullptr;
@@ -36,8 +38,7 @@ void AppWindow::initialize()
 	this->m_vs = graphicsEngine->createVertexShader(shaderByteCode, sizeShader);
 	*/
 	std::cout << "done creating shaderLibrary" << endl;
-	TextureManager::initialize();
-	MeshManager::initialize();
+	
 	
 	camera.setIdentity();
 	camera.setTranslation(Vector3D(0, 0, -2.0f));

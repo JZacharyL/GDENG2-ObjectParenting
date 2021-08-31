@@ -143,7 +143,19 @@ void MenuScreen::drawUI()
 
 
             }
+            if (ImGui::MenuItem("Physics Cube"))
+            {
+                //Call to game object manager
+                GameObjectManager::getInstance()->createObject(PrimitiveType::PHYSICS_CUBE);
 
+
+            }
+
+        	if(ImGui::MenuItem("Physics Plane"))
+        	{
+                GameObjectManager::getInstance()->createObject(PrimitiveType::PHYSICS_PLANE);
+
+        	}
             ImGui::EndMenu();
         }
 		ImGui::EndMainMenuBar();

@@ -12,7 +12,9 @@ enum PrimitiveType {
 	TEXTURED_CUBE,
 	TEAPOT,
 	BUNNY,
-	ARMADILLO
+	ARMADILLO,
+	PHYSICS_CUBE,
+	PHYSICS_PLANE
 };
 
 class GameObjectManager

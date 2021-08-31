@@ -201,6 +201,46 @@ public:
 		mat[3][2] = -(near_plane / (far_plane - near_plane));
 	}
 	
+	float* getMatrix()
+	{
+		//re-arrange to be compatible with react physics
+		/*float matrix4x4[16];
+		matrix4x4[0] = matrix[0][0]; matrix4x4[1] = matrix[1][0];
+		matrix4x4[2] = matrix[2][0]; matrix4x4[3] = 0.0;
+		matrix4x4[4] = matrix[0][1]; matrix4x4[5] = matrix[1][1];
+		matrix4x4[6] = matrix[2][1]; matrix4x4[7] = 0.0;
+		matrix4x4[8] = matrix[0][2]; matrix4x4[9] = matrix[1][2];
+		matrix4x4[10] = matrix[2][2]; matrix4x4[11] = 0.0;
+		matrix4x4[12] = matrix[3][0]; matrix4x4[13] = matrix[3][1];
+		matrix4x4[14] = matrix[3][2]; matrix4x4[15] = 1.0;
+		return matrix4x4;*/
+
+		return *this->mat;
+	}
+
+	void setManualMatrix(float matrix[16])
+	{
+		mat[0][0] = matrix[0];
+		mat[0][1] = matrix[1];
+		mat[0][2] = matrix[2];
+		mat[0][3] = matrix[3];
+
+		mat[1][0] = matrix[4];
+		mat[1][1] = matrix[5];
+		mat[1][2] = matrix[6];
+		mat[1][3] = matrix[7];
+
+		mat[2][0] = matrix[8];
+		mat[2][1] = matrix[9];
+		mat[2][2] = matrix[10];
+		mat[2][3] = matrix[11];
+
+		mat[3][0] = matrix[12];
+		mat[3][1] = matrix[13];
+		mat[3][2] = matrix[14];
+		mat[3][3] = matrix[15];
+	}
+
 
 private:
 	float mat[4][4] = {};

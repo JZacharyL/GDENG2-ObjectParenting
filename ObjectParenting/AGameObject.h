@@ -3,8 +3,11 @@
 #include "Vector3D.h"
 #include "Matrix4x4.h"
 #include "Quaternion.h"
+#include "AComponent.h"
 #include <iostream>
 #include <vector>
+
+
 
 using namespace std;
 
@@ -33,6 +36,9 @@ public:
 	AGameObject(string name);
 	~AGameObject();
 
+	typedef std::string String;
+	typedef std::vector<AComponent*> ComponentList;
+	
 	virtual void update(float deltaTime) = 0;
 	virtual void draw(int width, int height) = 0;
 
@@ -61,6 +67,21 @@ public:
 	
 	void unsetParent();
 	void removeChild(AGameObject* child);
+	
+	void updateLocalMatrix(); //updates local matrix based from latest position, rotation, and scale.
+	void setLocalMatrix(float matrix[16]);
+	float* getRawMatrix();
+	float* getPhysicsLocalMatrix(); //scale is set to 1.0
+
+	friend class GameObjectManager;
+
+	void attachComponent(AComponent* component);
+	void detachComponent(AComponent* component);
+
+	AComponent* findComponentByName(String name);
+	AComponent* findComponentOfType(AComponent::ComponentType type, String name);
+	ComponentList getComponentsOfType(AComponent::ComponentType type);
+	ComponentList getComponentsOfTypeRecursive(AComponent::ComponentType type);
 
 protected:
 	void setParent(AGameObject* newParent);
@@ -74,7 +95,10 @@ protected:
 	Vector3D relativeScale = Vector3D::ones();
 	Vector3D localRotation = Vector3D::zeros();
 	Matrix4x4 localMatrix;
+	
+	bool overrideMatrix = false;
 
+	ComponentList componentList;
 	//Parent checking
 	//Vector3D getPositionRecursive(float localx, float localy, float localz, AGameObject* parent);
 

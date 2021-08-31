@@ -8,6 +8,8 @@
 #include "Bunny.h"
 #include "AGameObject.h"
 #include "Armadillo.h"
+#include "PhysicsCube.h"
+#include "PhysicsPlane.h"
 
 GameObjectManager* GameObjectManager::sharedInstance = NULL;
 
@@ -142,6 +144,18 @@ void GameObjectManager::createObject(PrimitiveType type)
 		cout << "Textured ARMADILLO order parsed" << endl;
 		Armadillo* Bob = new Armadillo("Armadillo");
 		this->addObject(Bob);
+	}
+
+	if (type == PrimitiveType::PHYSICS_CUBE) {
+		cout << "Physics Cube order parsed" << endl;
+		PhysicsCube* pCube = new PhysicsCube("PCube");
+		this->addObject(pCube);
+
+	}
+	if (type == PrimitiveType::PHYSICS_PLANE) {
+		cout << "Physics Plane order parsed" << endl;
+		PhysicsPlane* pPlane = new PhysicsPlane("PPLane");
+		this->addObject(pPlane);
 
 	}
 }

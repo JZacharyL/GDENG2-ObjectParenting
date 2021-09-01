@@ -4,13 +4,18 @@ AGameObject::AGameObject(string name)
 {
 	this->name = name;
 	this->localPosition = Vector3D::zeros();
-	this->localRotation = Vector3D::zeros();
+	//this->localRotation = Vector3D::zeros();
 	this->localScale = Vector3D::ones();
 }
 
 AGameObject::~AGameObject()
 {
+	for (int i = 0; i < this->componentList.size(); i++) {
+		this->componentList[i]->detachOwner();
+	}
+	this->componentList.clear();
 }
+
 
 //Total time taken 4 hours
 void AGameObject::setPosition(float x, float y, float z)
@@ -29,6 +34,7 @@ void AGameObject::setPosition(float x, float y, float z)
 		//translate child position based on the parents new position and the calculated displacement value
 		child->setPosition(Vector3D(x, y, z) + displacement);
 	}
+	this->overrideMatrix = false;
 }
 
 void AGameObject::setPosition(Vector3D pos)
@@ -47,6 +53,7 @@ void AGameObject::setPosition(Vector3D pos)
 		//translate child position based on the parents new position and the calculated displacement value
 		child->setPosition(pos + displacement);
 	}
+	this->overrideMatrix = false;
 }
 
 Vector3D AGameObject::getLocalPosition()
@@ -82,6 +89,7 @@ void AGameObject::setScale(float x, float y, float z)
 			child->setScale(childScale);
 		}
 	}
+	this->overrideMatrix = false;
 }
 
 void AGameObject::setScale(Vector3D scale)
@@ -111,6 +119,7 @@ void AGameObject::setScale(Vector3D scale)
 			child->setScale(childScale);
 		}
 	}
+	this->overrideMatrix = false;
 }
 
 Vector3D AGameObject::getLocalScale()
@@ -121,13 +130,17 @@ Vector3D AGameObject::getLocalScale()
 //Done after 17 hours ... now 20
 void AGameObject::setRotation(float x, float y, float z)
 {
-	Vector3D oldRot = localRotation;
-	this->localRotation = Vector3D(x, y, z);
-	Vector3D rotDiff = localRotation - oldRot;
-
+	//OUR CUSTOM IMPLEMENTATION
+	Vector3D oldRot = Vector3D(this->orientation.x, this->orientation.y, this->orientation.z);
+	this->orientation = {};
+	this->orientation.x = x;
+	this->orientation.y = y;
+	this->orientation.z = z;
+	Vector3D rotDiff = Vector3D(this->orientation.x, this->orientation.y, this->orientation.z) - oldRot;
+	this->overrideMatrix = false;
 	//Account for parent object
-	this->localRotation = Vector3D(x, y, z);
-
+	//this->localRotation = Vector3D(x, y, z);
+	
 	//For all childs
 	for (AGameObject* child : ChildList) {
 		Vector3D savedPos = localPosition;
@@ -213,14 +226,21 @@ void AGameObject::setRotation(float x, float y, float z)
 		child->setRotation(rotDiff + child->getLocalRotation());
 	}
 }
-
 void AGameObject::setRotation(Vector3D rot)
 {
 	//Account for parent object
+
+	Vector3D oldRot = Vector3D(this->orientation.x, this->orientation.y, this->orientation.z);
+	//this->localRotation = rot;
+
+	this->orientation = {};
+	this->orientation.x = rot.getX();
+	this->orientation.y = rot.getY();
+	this->orientation.z = rot.getZ();
 	
-	Vector3D oldRot = localRotation;
-	this->localRotation = rot;
-	Vector3D rotDiff = localRotation - oldRot;
+	Vector3D rotDiff = Vector3D(this->orientation.x, this->orientation.y, this->orientation.z) - oldRot;
+	
+	this->overrideMatrix = false;
 	
 	//San check for quat * quat
 	/*
@@ -260,7 +280,7 @@ void AGameObject::setRotation(Vector3D rot)
 		Quaternion xRot = Quaternion(Vector3D(1, 0, 0), localRotation.x);
 		totalRotation *= xRot;
 
-		
+
 		cout << totalRotation.w << endl;
 
 		//Account for Rotation around the y axis
@@ -295,7 +315,7 @@ void AGameObject::setRotation(Vector3D rot)
 			initialPosition = child->getLocalPosition();
 			newPosition = Quaternion::Rotate(&initialPosition, zRot);
 		}
-		
+
 		//cout << totalRotation.w << endl;
 		/*
 		Vector3D dir;
@@ -303,7 +323,7 @@ void AGameObject::setRotation(Vector3D rot)
 
 		//Get the distance from the parent to the child
 		Vector3D mag = child->localPosition - localPosition;
-		
+
 		//Get the angle coefficients on each axis of rotation
 		//Around the z axis
 		float angleX = cos(rotDiff.x);
@@ -320,7 +340,7 @@ void AGameObject::setRotation(Vector3D rot)
 
 		//Set the new position first
 		child->setPosition(newPosition);
-		
+
 		setPosition(savedPos);
 
 		//child->setRotation(newPosition);
@@ -329,9 +349,20 @@ void AGameObject::setRotation(Vector3D rot)
 	}
 }
 
+void AGameObject::setRotation(float x, float y, float z, float w)
+{
+	this->orientation = {};
+	this->orientation.x = x;
+	this->orientation.y = y;
+	this->orientation.z = z;
+	this->orientation.w = w;
+	this->overrideMatrix = false;
+
+	std::cout << "SetRotation Quaternion Call";
+}
 Vector3D AGameObject::getLocalRotation()
 {
-	return this->localRotation;
+	return Vector3D(this->orientation.x, this->orientation.y, this->orientation.z);
 }
 
 string AGameObject::getName()
@@ -409,19 +440,34 @@ void AGameObject::removeChild(AGameObject* child)
 void AGameObject::updateLocalMatrix()
 {
 	//setup transformation matrix for drawing.
-	Matrix4x4 allMatrix; allMatrix.setIdentity();
-	Matrix4x4 translationMatrix; translationMatrix.setIdentity();  translationMatrix.setTranslation(this->getLocalPosition());
-	Matrix4x4 scaleMatrix; scaleMatrix.setScale(this->getLocalScale());
+	Matrix4x4 allMatrix;
+	allMatrix.setIdentity();
+	Matrix4x4 translationMatrix;
+	translationMatrix.setIdentity();
+	translationMatrix.setTranslation(this->getLocalPosition());
+	Matrix4x4 scaleMatrix;
+	scaleMatrix.setIdentity();
+	
+	scaleMatrix.setScale(this->getLocalScale());
 	Vector3D rotation = this->getLocalRotation();
-	Matrix4x4 xMatrix; xMatrix.setRotationX(rotation.getX());
-	Matrix4x4 yMatrix; yMatrix.setRotationY(rotation.getY());
-	Matrix4x4 zMatrix; zMatrix.setRotationZ(rotation.getZ());
+	
+	Matrix4x4 xMatrix;
+	xMatrix.setIdentity();
+	xMatrix.setRotationX(rotation.getX());
+	Matrix4x4 yMatrix;
+	yMatrix.setIdentity();
+	yMatrix.setRotationY(rotation.getY());
+	Matrix4x4 zMatrix;
+	zMatrix.setIdentity();
+	zMatrix.setRotationZ(rotation.getZ());
 
 	//Scale --> Rotate --> Transform as recommended order.
-	Matrix4x4 rotMatrix; rotMatrix.setIdentity();
+	Matrix4x4 rotMatrix;
+	rotMatrix.setIdentity();
 	rotMatrix = rotMatrix.multiplyTo(xMatrix.multiplyTo(yMatrix.multiplyTo(zMatrix)));
 
 	allMatrix = allMatrix.multiplyTo(scaleMatrix.multiplyTo(rotMatrix));
+	
 	allMatrix = allMatrix.multiplyTo(translationMatrix);
 	this->localMatrix = allMatrix;
 }
@@ -452,9 +498,15 @@ void AGameObject::setLocalMatrix(float matrix[16])
 	matrix4x4[3][2] = matrix[14];
 	matrix4x4[3][3] = matrix[15];
 	*/
-	Matrix4x4 newMatrix; newMatrix.setMatrix(matrix4x4);
-	Matrix4x4 scaleMatrix; scaleMatrix.setScale(this->localScale);
-	Matrix4x4 transMatrix; transMatrix.setTranslation(this->localPosition);
+	Matrix4x4 newMatrix;
+	newMatrix.setIdentity();
+	newMatrix.setMatrix(matrix4x4);
+	Matrix4x4 scaleMatrix;
+	scaleMatrix.setIdentity();
+	scaleMatrix.setScale(this->localScale);
+	Matrix4x4 transMatrix;
+	transMatrix.setIdentity();
+	transMatrix.setTranslation(this->localPosition);
 	this->localMatrix = scaleMatrix.multiplyTo(transMatrix.multiplyTo(newMatrix));
 	this->overrideMatrix = true;
 }
@@ -467,17 +519,32 @@ float* AGameObject::getRawMatrix()
 
 float* AGameObject::getPhysicsLocalMatrix()
 {
-	Matrix4x4 allMatrix; allMatrix.setIdentity();
-	Matrix4x4 translationMatrix; translationMatrix.setIdentity();
+	Matrix4x4 allMatrix;
+	allMatrix.setIdentity();
+	Matrix4x4 translationMatrix;
+	translationMatrix.setIdentity();
+
 	translationMatrix.setTranslation(this->getLocalPosition());
-	Matrix4x4 scaleMatrix; scaleMatrix.setScale(Vector3D::ones()); //physics 3D only accepts uniform scale for rigidbody
+	Matrix4x4 scaleMatrix;
+	scaleMatrix.setIdentity();
+	scaleMatrix.setScale(Vector3D::ones()); //physics 3D only accepts uniform scale for rigidbody
+
 	Vector3D rotation = this->getLocalRotation();
-	Matrix4x4 xMatrix; xMatrix.setRotationX(rotation.getX());
-	Matrix4x4 yMatrix; yMatrix.setRotationY(rotation.getY());
-	Matrix4x4 zMatrix; zMatrix.setRotationZ(rotation.getZ());
+	Matrix4x4 xMatrix;
+	xMatrix.setIdentity();
+	xMatrix.setRotationX(rotation.getX());
+	Matrix4x4 yMatrix;
+	yMatrix.setIdentity();
+	yMatrix.setRotationY(rotation.getY());
+
+	
+	Matrix4x4 zMatrix;
+	zMatrix.setIdentity();
+	zMatrix.setRotationZ(rotation.getZ());
 
 	//Scale --> Rotate --> Transform as recommended order.
-	Matrix4x4 rotMatrix; rotMatrix.setIdentity();
+	Matrix4x4 rotMatrix;
+	rotMatrix.setIdentity();
 	rotMatrix = rotMatrix.multiplyTo(xMatrix.multiplyTo(yMatrix.multiplyTo(zMatrix)));
 
 	allMatrix = allMatrix.multiplyTo(scaleMatrix.multiplyTo(rotMatrix));
@@ -576,3 +643,13 @@ Vector3D AGameObject::getPositionRecursive(float localx, float localy, float loc
 //if(parent.hasParent == true) -> parent = parent.parent
 //position, scale, rotation = locals + parents;
 //if(parent.hasParent == false) -> done transforming
+
+/*OUR PREVIOUS IMPLEMENTATION
+ *
+ *
+ *
+ *
+ *
+ *
+ * 
+ */

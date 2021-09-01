@@ -4,7 +4,7 @@
 #include "ShaderLibrary.h"
 #include "BaseComponentSystem.h"
 #include "PhysicsSystem.h"
-
+#include <iostream>
 PhysicsPlane::PhysicsPlane(String name, bool skipInit) : Quad(name)
 {
 	ShaderNames shaderNames;
@@ -17,10 +17,10 @@ PhysicsPlane::PhysicsPlane(String name, bool skipInit) : Quad(name)
 	vertex quadList[] = {
 		//X, Y, Z
 		//FRONT FACE
-		{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(1,1,1),  Vector3D(0.2f,0,0) },
-		{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(1,1,1), Vector3D(0.2f,0.2f,0) },
-		{Vector3D(0.5f,0.5f,-0.5f),   Vector3D(1,1,1),  Vector3D(0.2f,0.2f,0) },
-		{Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(1,1,1), Vector3D(0.2f,0,0) },
+		{Vector3D(-0.5f,-0.5f,-0.5f),    Vector3D(0,1,1),  Vector3D(0.2f,0,0) },
+		{Vector3D(-0.5f,0.5f,-0.5f),    Vector3D(0,1,1), Vector3D(0.2f,0.2f,0) },
+		{Vector3D(0.5f,0.5f,-0.5f),   Vector3D(0,1,1),  Vector3D(0.2f,0.2f,0) },
+		{Vector3D(0.5f,-0.5f,-0.5f),     Vector3D(0,1,1), Vector3D(0.2f,0,0) },
 
 		//BACK FACE
 		{Vector3D(0.5f,-0.5f,0.5f),    Vector3D(1,1,1), Vector3D(0,0.2f,0) },
@@ -69,10 +69,13 @@ PhysicsPlane::PhysicsPlane(String name, bool skipInit) : Quad(name)
 	
 
 	this->setPosition(0.0f, -5.0f, 0.0f);
-	this->setScale(32.0f, 0.2f, 32.0f);
+	this->setScale(16.0f, 0.2f, 16.0f);
 	this->setRotation(0.0f, 0.0f, 0.0f);
 	this->updateLocalMatrix();
+	std::cout << "attaching component" << std::endl;
 	this->attachComponent(new PhysicsComponent("PhysicsComponent", this));
+	std::cout << "Done attaching component" << std::endl;
+	
 
 	PhysicsComponent* component = (PhysicsComponent*)this->findComponentOfType(AComponent::ComponentType::Physics, "PhysicsComponent");
 	component->getRigidBody()->setType(BodyType::KINEMATIC);

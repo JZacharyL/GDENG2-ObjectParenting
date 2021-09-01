@@ -6,7 +6,7 @@
 #include "AComponent.h"
 #include <iostream>
 #include <vector>
-
+#include "reactphysics3d/reactphysics3d.h"
 
 
 using namespace std;
@@ -33,6 +33,15 @@ class PixelShader;
 class AGameObject
 {
 public:
+
+	struct AQuaternion {
+		float w = 0.0f;
+		float x = 0.0f;
+		float y = 0.0f;
+		float z = 0.0f;
+	};
+
+	
 	AGameObject(string name);
 	~AGameObject();
 
@@ -53,6 +62,7 @@ public:
 
 	void setRotation(float x, float y, float z);
 	void setRotation(Vector3D rot);
+	void setRotation(float x, float y, float z, float w);//added from sir
 	Vector3D getLocalRotation();
 
 	string getName();
@@ -93,9 +103,12 @@ protected:
 	Vector3D localPosition;
 	Vector3D localScale;
 	Vector3D relativeScale = Vector3D::ones();
-	Vector3D localRotation = Vector3D::zeros();
+	//Vector3D localRotation = Vector3D::zeros();
 	Matrix4x4 localMatrix;
-	
+
+	AQuaternion orientation;
+
+
 	bool overrideMatrix = false;
 
 	ComponentList componentList;

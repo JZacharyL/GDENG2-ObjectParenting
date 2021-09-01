@@ -12,9 +12,9 @@ Quad::Quad(string name) : AGameObject(name)
 	vertex vertex_list[] =
 	{
 		{Vector3D(-0.25f,-0.25f,-0.25f),	Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS1
-		{Vector3D(-0.25f,0.25f,-0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS2
-		{Vector3D(0.25f,0.25f,-0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS3
-		{Vector3D(0.25f,-0.25f,-0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)},
+		{Vector3D(-0.25f,0.25f,-0.25f),		Vector3D(0,1,1),		Vector3D(1,1,1)}, // POS2
+		{Vector3D(0.25f,0.25f,-0.25f),		Vector3D(1,0,1),		Vector3D(1,1,1)}, // POS3
+		{Vector3D(0.25f,-0.25f,-0.25f),		Vector3D(0,1,1),		Vector3D(1,1,1)},
 
 		{Vector3D(0.25f,-0.25f,0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS1
 		{Vector3D(0.25f,0.25f,0.25f),			Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS2
@@ -92,9 +92,9 @@ void Quad::draw(int width, int height)
 	
 	this->deltaScale += this->deltaTime / 1.0f;
 	
-	Matrix4x4 allMatrix; 
-	allMatrix.setIdentity();
-
+	//Matrix4x4 allMatrix; 
+	//allMatrix.setIdentity();
+	/*
 	Matrix4x4 translationMatrix; 
 	translationMatrix.setIdentity(); 
 	translationMatrix.setTranslation(this->getLocalPosition());
@@ -121,9 +121,22 @@ void Quad::draw(int width, int height)
 	rotMatrix = rotMatrix.multiplyTo(xMatrix.multiplyTo(yMatrix.multiplyTo(zMatrix)));
 	allMatrix = allMatrix.multiplyTo(scaleMatrix.multiplyTo(rotMatrix));
 	allMatrix *= translationMatrix;
+	*/
+
+	if(this->overrideMatrix)
+	{
+		cc.m_world = this->localMatrix;
+	}
+	else
+	{
+		this->updateLocalMatrix();
+		cc.m_world = this->localMatrix;
+	}
 	
+
+
 	//cc.m_world.setIdentity();
-	cc.m_world = allMatrix;
+	
 
 	Matrix4x4 cameraMatrix = SceneCameraHandler::get()->getSceneCameraViewMatrix();
 	cc.m_view = cameraMatrix;

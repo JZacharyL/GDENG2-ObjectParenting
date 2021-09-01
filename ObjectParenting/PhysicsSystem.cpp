@@ -72,8 +72,10 @@ void PhysicsSystem::updateAllComponents()
 	//do not update during first frame. Delta time is still 0.
 	if (EngineTime::getDeltaTime() > 0.0f) {
 		//update physics world
+		//std::cout << "EngineTime: " << EngineTime::getDeltaTime() << std::endl;
 		this->physicsWorld->update(EngineTime::getDeltaTime());
 		for (int i = 0; i < this->componentList.size(); i++) {
+			//std::cout << "UPDATING COMPONENTS" << std::endl;
 			this->componentList[i]->perform(EngineTime::getDeltaTime());
 		}
 	}

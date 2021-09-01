@@ -19,10 +19,10 @@ public:
 	void setIdentity()
 	{
 		::memset(mat, 0, sizeof(float) * 16);
-		mat[0][0] = 1;
-		mat[1][1] = 1;
-		mat[2][2] = 1;
-		mat[3][3] = 1;
+		mat[0][0] = 1.0f;
+		mat[1][1] = 1.0f;
+		mat[2][2] = 1.0f;
+		mat[3][3] = 1.0f;
 	}
 
 	void setTranslation(const Vector3D& translation)

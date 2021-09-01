@@ -1,7 +1,7 @@
 #include "HierarchyScreen.h"
-#include "IMGUI/imgui.h"
-#include "IMGUI/imgui_impl_dx11.h"
-#include "IMGUI/imgui_impl_win32.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_dx11.h"
+#include "imgui/imgui_impl_win32.h"
 #include "GameObjectManager.h"
 #include "UIManager.h"
 

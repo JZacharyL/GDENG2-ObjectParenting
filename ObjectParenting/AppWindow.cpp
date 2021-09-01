@@ -7,7 +7,8 @@
 #include "TextureManager.h"
 #include "MeshManager.h"
 #include "ShaderLibrary.h"
-
+#include "BaseComponentSystem.h"
+#include "PhysicsSystem.h"
 AppWindow::AppWindow()
 {
 }
@@ -31,6 +32,7 @@ void AppWindow::initialize()
 	TextureManager::initialize();
 	MeshManager::initialize();
 	ShaderLibrary::initialize();
+	BaseComponentSystem::initialize();
 	/*
 	void* shaderByteCode = nullptr;
 	size_t sizeShader = 0;
@@ -87,6 +89,8 @@ void AppWindow::onUpdate()
 
 	deviceContext->setViewportSize(width, height);
 
+	
+	BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
 	//Update from game manager
 	GameObjectManager::getInstance()->updateAll();
 

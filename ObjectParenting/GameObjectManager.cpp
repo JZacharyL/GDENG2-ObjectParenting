@@ -148,7 +148,7 @@ void GameObjectManager::createObject(PrimitiveType type)
 
 	if (type == PrimitiveType::PHYSICS_CUBE) {
 		cout << "Physics Cube order parsed" << endl;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 20; i++) {
 			PhysicsCube* pCube = new PhysicsCube("PCube");
 			this->addObject(pCube);
 		}

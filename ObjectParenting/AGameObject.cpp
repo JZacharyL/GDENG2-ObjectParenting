@@ -477,6 +477,7 @@ void AGameObject::setLocalMatrix(float matrix[16])
 	Matrix4x4 matrix4x4;
 
 	matrix4x4.setManualMatrix(matrix);
+	
 	/*
 	matrix4x4[0][0] = matrix[0];
 	matrix4x4[0][1] = matrix[1];
@@ -550,6 +551,7 @@ float* AGameObject::getPhysicsLocalMatrix()
 	allMatrix = allMatrix.multiplyTo(scaleMatrix.multiplyTo(rotMatrix));
 	allMatrix = allMatrix.multiplyTo(translationMatrix);
 
+	allMatrix.debug();
 	return allMatrix.getMatrix();
 }
 

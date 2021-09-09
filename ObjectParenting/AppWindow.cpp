@@ -120,6 +120,7 @@ void AppWindow::onDestroy()
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 	GraphicsEngine::get()->release();
+	
 }
 
 void AppWindow::onFocus()

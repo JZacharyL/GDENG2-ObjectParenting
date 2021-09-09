@@ -1,8 +1,9 @@
 #pragma once
+#include <iostream>
 #include <memory>
 #include "Vector4D.h"
 #include "Vector3D.h"
-
+#include <string>
 class Matrix4x4
 {
 public:
@@ -239,6 +240,13 @@ public:
 		mat[3][1] = matrix[13];
 		mat[3][2] = matrix[14];
 		mat[3][3] = matrix[15];
+	}
+
+	void debug() {
+		std::cout << std::to_string(mat[0][0]) << " " << std::to_string(mat[0][1]) << " " << std::to_string(mat[0][2]) << " " << std::to_string(mat[0][3]) << std::endl;
+		std::cout << std::to_string(mat[1][0]) << " " << std::to_string(mat[1][1]) << " " << std::to_string(mat[1][2]) << " " << std::to_string(mat[1][3]) << std::endl;
+		std::cout << std::to_string(mat[2][0]) << " " << std::to_string(mat[2][1]) << " " << std::to_string(mat[2][2]) << " " << std::to_string(mat[2][3]) << std::endl;
+		std::cout << std::to_string(mat[3][0]) << " " << std::to_string(mat[3][1]) << " " << std::to_string(mat[3][2]) << " " << std::to_string(mat[3][3]) << std::endl << std::endl;
 	}
 
 

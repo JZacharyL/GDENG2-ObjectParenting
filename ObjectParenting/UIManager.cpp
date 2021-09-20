@@ -4,7 +4,8 @@
 #include "MenuScreen.h"
 #include "HierarchyScreen.h"
 #include "Inspector.h"
-
+#include "Playback_Screen.h"
+#include "Action_Screen.h"
 UIManager* UIManager::sharedInstance = NULL;\
 
 UIManager* UIManager::getInstance()
@@ -94,6 +95,14 @@ UIManager::UIManager(HWND windowHandle)
 	Inspector* inspector = new Inspector();
 	this->uTable[uiNames.INSPECTOR_SCREEN] = inspector;
 	this->uList.push_back(inspector);
+
+	PlaybackScreen* playbackscreen = new PlaybackScreen();
+	this->uTable[uiNames.PLAYBACK_SCREEN] = playbackscreen;
+	this->uList.push_back(playbackscreen);
+
+	ActionScreen* actionScreen = new ActionScreen();
+	this->uTable[uiNames.ACTION_SCREEN] = actionScreen;
+	this->uList.push_back(actionScreen);
 }
 
 UIManager::~UIManager()

@@ -35,7 +35,7 @@ Camera::View SceneCameraHandler::getSceneCameraProjectionMatrix()
 
 SceneCameraHandler::SceneCameraHandler(RECT window)
 {
-	this->sceneCamera = new Camera("SceneCamera");
+	this->sceneCamera = new Camera("SceneCamera", AGameObject::CAMERA);
 	this->sceneCamera->initialize(window);
 }
 

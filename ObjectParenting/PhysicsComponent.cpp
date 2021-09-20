@@ -46,8 +46,9 @@ PhysicsComponent::PhysicsComponent(String name, AGameObject* owner) : AComponent
 
 PhysicsComponent::~PhysicsComponent()
 {
-	AComponent::~AComponent();
 	BaseComponentSystem::getInstance()->getPhysicsSystem()->unregisterComponent(this);
+	AComponent::~AComponent();
+	
 }
 
 void PhysicsComponent::perform(float deltaTime)

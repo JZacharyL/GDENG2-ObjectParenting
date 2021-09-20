@@ -7,13 +7,13 @@
 #include "TexturedVertexBuffer.h"
 #include "Mesh.h"
 #include "MeshManager.h"
-Bunny::Bunny(string name) : AGameObject(name)
+Bunny::Bunny(std::string name, PrimitiveType type) : AGameObject(name, type)
 {
 
-	cout << "Textured bunny constructor " << endl;
+	std::cout << "Textured bunny constructor " << std::endl;
 	BunnyMesh = (Mesh*)MeshManager::getInstance()->createMeshFromFile(L"C:/Users/monet/source/repos/GDENG2ObjectParent/GDENG2ObjectParent/Assets/objects/bunny.obj");
 	//create constant buffer
-	cout << "done getting bunnymesh instance " << endl;
+	std::cout << "done getting bunnymesh instance " << std::endl;
 	constant cc;
 	cc.m_time = 0;
 

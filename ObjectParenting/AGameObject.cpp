@@ -1,8 +1,9 @@
 #include "AGameObject.h"
-
-AGameObject::AGameObject(string name)
+#include "EditorAction.h"
+AGameObject::AGameObject(std::string name, PrimitiveType type)
 {
 	this->name = name;
+	this->objectType = type;
 	this->localPosition = Vector3D::zeros();
 	//this->localRotation = Vector3D::zeros();
 	this->localScale = Vector3D::ones();
@@ -14,6 +15,8 @@ AGameObject::~AGameObject()
 		this->componentList[i]->detachOwner();
 	}
 	this->componentList.clear();
+
+	
 }
 
 
@@ -365,12 +368,12 @@ Vector3D AGameObject::getLocalRotation()
 	return Vector3D(this->orientation.x, this->orientation.y, this->orientation.z);
 }
 
-string AGameObject::getName()
+std::string AGameObject::getName()
 {
 	return this->name;
 }
 
-void AGameObject::setName(string newName)
+void AGameObject::setName(std::string newName)
 {
 	name = newName;
 }
@@ -402,7 +405,7 @@ AGameObject* AGameObject::getParent()
 	//THIS IMPLEMENTATION IS PRONE TO INFINITE LOOP
 	//A parent can be a child of the object that it is a parent of... so don't do that >w o
 	if (!hasParent) {
-		cout << "Call to null parent made" << endl;
+		std::cout << "Call to null parent made" << std::endl;
 	}
 	return Parent;
 }
@@ -518,6 +521,12 @@ float* AGameObject::getRawMatrix()
 	return matrix4x4;
 }
 
+Matrix4x4 AGameObject::getLocalMatrix()
+{
+	return this->localMatrix;
+}
+
+
 float* AGameObject::getPhysicsLocalMatrix()
 {
 	Matrix4x4 allMatrix;
@@ -551,7 +560,7 @@ float* AGameObject::getPhysicsLocalMatrix()
 	allMatrix = allMatrix.multiplyTo(scaleMatrix.multiplyTo(rotMatrix));
 	allMatrix = allMatrix.multiplyTo(translationMatrix);
 
-	allMatrix.debug();
+	//allMatrix.debug();
 	return allMatrix.getMatrix();
 }
 
@@ -621,6 +630,34 @@ AGameObject::ComponentList AGameObject::getComponentsOfTypeRecursive(AComponent:
 	return foundList;
 }
 
+void AGameObject::saveEditState()
+{
+	if (this->lastEditState == NULL) {
+		this->lastEditState = new EditorAction(this);
+		std::cout << "Stored save Edits\n";
+	}
+}
+
+void AGameObject::restoreEditState()
+{
+	if (this->lastEditState != NULL) {
+		this->localPosition = this->lastEditState->getStorePos();
+		this->localScale = this->lastEditState->getStoredScale();
+		this->orientation = this->lastEditState->getStoredOrientation();
+		this->localMatrix = this->lastEditState->getStoredMatrix();
+
+		this->lastEditState = NULL;
+	}
+	else {
+		std::cout << "Edit state is null. Cannot restore. \n";
+	}
+}
+
+
+AGameObject::PrimitiveType AGameObject::getObjectType()
+{
+	return this->objectType;
+}
 
 /*
 Vector3D AGameObject::getPositionRecursive(float localx, float localy, float localz, AGameObject* parent)

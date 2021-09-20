@@ -17,7 +17,7 @@ class Bunny :
 	public AGameObject
 {
 public:
-	Bunny(string name);
+	Bunny(std::string name,PrimitiveType type);
 	~Bunny();
 	void update(float deltaTime) override;
 	void draw(int width, int height) override;

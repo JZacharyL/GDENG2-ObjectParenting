@@ -5,18 +5,8 @@
 #include <unordered_map>
 #include "AGameObject.h"
 
-enum PrimitiveType {
-	CUBE,
-	PLANE,
-	SPHERE,
-	TEXTURED_CUBE,
-	TEAPOT,
-	BUNNY,
-	ARMADILLO,
-	PHYSICS_CUBE,
-	PHYSICS_PLANE
-};
 
+class EditorAction;
 class GameObjectManager
 {
 public:
@@ -28,18 +18,23 @@ public:
 	static void initialize();
 	static void destroy();
 
-	AGameObject* findObjectByName(string name);
+	AGameObject* findObjectByName(std::string name);
 	List getAllObjects();
 	int activeObjects();
 	void updateAll();
 	void renderAll(int viewportWidth, int viewportHeight);
 	void addObject(AGameObject* gameObject);
-	void createObject(PrimitiveType type);
+	void createObject(AGameObject::PrimitiveType type);
+	void createObjectFromFile(String name, AGameObject::PrimitiveType type, Vector3D position, Vector3D rotation, Vector3D scale);
 	void deleteObject(AGameObject* gameObject);
-	void deleteObjectByName(string name);
-	void setSelectedObject(string name);
+	void deleteObjectByName(std::string name);
+	void setSelectedObject(std::string name);
 	void setSelectedObject(AGameObject* gameObject);
 	AGameObject* getSelectedObject();
+
+	void saveEditStates();
+	void restoreEditStates();
+	void applyEditorAction(EditorAction* action);
 
 private:
 	GameObjectManager();

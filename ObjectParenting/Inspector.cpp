@@ -5,7 +5,7 @@
 #include "GameObjectManager.h"
 #include "UIManager.h"
 #include "AGameObject.h"
-
+#include "ActionHistory.h"
 Inspector::Inspector() : AUIScreen("Inspector")
 {
 }
@@ -27,6 +27,8 @@ void Inspector::drawUI()
 		this->updateTransformDisplays();
 		bool enabled = this->selectedObject->isEnabled();
 		if (ImGui::Checkbox("Enabled", &enabled)) { this->selectedObject->setEnabled(enabled); }
+
+		if (ImGui::Button("Delete")) { GameObjectManager::getInstance()->deleteObjectByName(this->selectedObject->getName()); }
 		if (ImGui::InputFloat3("Position", this->positionDisplay, 4));
 
 		if (ImGui::IsItemDeactivatedAfterEdit()) {
@@ -46,7 +48,7 @@ void Inspector::drawUI()
 		}
 		
 		//Parent child UI
-		string parentTitle;
+		std::string parentTitle;
 		if (this->selectedObject->isChild()) {
 			//Header
 			parentTitle = ("Object parent: %s", this->selectedObject->getParent()->getName());
@@ -60,13 +62,13 @@ void Inspector::drawUI()
 		ImGui::Text(parentTitle.c_str());
 		static char str0[128];
 		ImGui::InputText("Set New Parent", str0, IM_ARRAYSIZE(str0));
-		string textVal = str0;
+		std::string textVal = str0;
 
 		if (ImGui::IsItemEdited()) {
 			//if the text field request an actual object
 			if (GameObjectManager::getInstance()->findObjectByName(textVal) != NULL) {
 				//Set object as parent
-				cout << textVal << endl;
+				std::cout << textVal << std::endl;
 
 				AGameObject* newParent = GameObjectManager::getInstance()->findObjectByName(textVal);
 				newParent->addChild(selectedObject);
@@ -109,7 +111,9 @@ void Inspector::updateTransformDisplays()
 
 void Inspector::onTransformUpdate()
 {
+	
 	if (this->selectedObject != NULL) {
+		ActionHistory::getInstance()->recordAction(this->selectedObject);
 		this->selectedObject->setScale(Vector3D(this->scaleDisplay[0], this->scaleDisplay[1], this->scaleDisplay[2]));
 
 		//* 0.0174533
@@ -126,16 +130,19 @@ void Inspector::onTransformUpdate()
 
 void Inspector::onTranslateUpdate()
 {
+	
 	if (this->selectedObject != NULL) {
+		ActionHistory::getInstance()->recordAction(this->selectedObject);
 		this->selectedObject->setPosition(Vector3D(this->positionDisplay[0], this->positionDisplay[1], this->positionDisplay[2]));
 	}
 }
 
 void Inspector::onRotateUpdate()
 {
+	
 	if (this->selectedObject != NULL) {
 		//* 0.0174533
-
+		ActionHistory::getInstance()->recordAction(this->selectedObject);
 		float rotX = this->rotationDisplay[0] * 0.0174533;
 		float rotY = this->rotationDisplay[1] * 0.0174533;
 		float rotZ = this->rotationDisplay[2] * 0.0174533;
@@ -146,7 +153,9 @@ void Inspector::onRotateUpdate()
 
 void Inspector::onScaleUpdate()
 {
+	
 	if (this->selectedObject != NULL) {
+		ActionHistory::getInstance()->recordAction(this->selectedObject);
 		this->selectedObject->setScale(Vector3D(this->scaleDisplay[0], this->scaleDisplay[1], this->scaleDisplay[2]));
 	}
 }

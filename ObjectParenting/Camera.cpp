@@ -2,7 +2,7 @@
 #include "InputSystem.h"
 #include "EngineTime.h"
 
-Camera::Camera(string name) : AGameObject(name)
+Camera::Camera(std::string name, PrimitiveType type) : AGameObject(name, type)
 {
 	InputSystem::get()->addListener(this);
 

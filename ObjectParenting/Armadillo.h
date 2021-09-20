@@ -17,7 +17,7 @@ class Armadillo :
 	public AGameObject
 {
 public:
-	Armadillo(string name);
+	Armadillo(std::string name, PrimitiveType type);
 	~Armadillo();
 	void update(float deltaTime) override;
 	void draw(int width, int height) override;

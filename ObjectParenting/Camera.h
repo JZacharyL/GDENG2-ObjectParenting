@@ -14,7 +14,7 @@ public:
 		Orthographic
 	};
 	
-	Camera(string name);
+	Camera(std::string name, PrimitiveType type);
 	~Camera();
 
 	void initialize(RECT window);

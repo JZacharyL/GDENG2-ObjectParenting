@@ -1,7 +1,7 @@
 #include "Quad.h"
 #include "SceneCameraHandler.h"
 #include "ShaderLibrary.h"
-Quad::Quad(string name) : AGameObject(name)
+Quad::Quad(std::string name, PrimitiveType type) : AGameObject(name,type)
 {
 
 	ShaderNames shaderNames;

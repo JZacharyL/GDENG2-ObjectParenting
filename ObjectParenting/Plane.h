@@ -14,7 +14,7 @@
 class Plane : public AGameObject
 {
 public:
-	Plane(string name);
+	Plane(std::string name, PrimitiveType type);
 	~Plane();
 
 	void update(float deltaTime) override;

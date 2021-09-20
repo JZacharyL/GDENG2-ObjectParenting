@@ -5,7 +5,7 @@
 #include "BaseComponentSystem.h"
 #include "PhysicsSystem.h"
 #include <iostream>
-PhysicsPlane::PhysicsPlane(String name, bool skipInit) : Quad(name)
+PhysicsPlane::PhysicsPlane(String name, PrimitiveType type,bool skipInit) : Quad(name,type)
 {
 	ShaderNames shaderNames;
 	void* shaderByteCode = NULL;

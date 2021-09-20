@@ -17,7 +17,7 @@ class Teapot :
     public AGameObject
 {
 public:
-	Teapot(string name);
+	Teapot(std::string name, PrimitiveType type);
 	~Teapot();
 	void update(float deltaTime) override;
 	void draw(int width, int height) override;

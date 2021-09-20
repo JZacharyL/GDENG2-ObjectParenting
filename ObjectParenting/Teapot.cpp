@@ -7,7 +7,7 @@
 #include "TexturedVertexBuffer.h"
 #include "Mesh.h"
 #include "MeshManager.h"
-Teapot::Teapot(string name) : AGameObject(name)
+Teapot::Teapot(std::string name, PrimitiveType type) : AGameObject(name,  type)
 {
 	
 	

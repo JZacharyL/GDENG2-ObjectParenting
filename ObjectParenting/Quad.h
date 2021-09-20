@@ -14,7 +14,7 @@
 class Quad : public AGameObject
 {
 public:
-	Quad(string name);
+	Quad(std::string name, PrimitiveType type);
 	~Quad();
 	
 	void update(float deltaTime) override;

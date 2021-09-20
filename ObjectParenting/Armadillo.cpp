@@ -7,7 +7,7 @@
 #include "TexturedVertexBuffer.h"
 #include "Mesh.h"
 #include "MeshManager.h"
-Armadillo::Armadillo(string name) : AGameObject(name)
+Armadillo::Armadillo(std::string name, PrimitiveType type) : AGameObject(name, type)
 {
 
 	//cout << "Textured Armadillo constructor " << endl;

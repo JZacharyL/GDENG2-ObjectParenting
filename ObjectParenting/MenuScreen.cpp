@@ -4,8 +4,19 @@
 #include "GameObjectManager.h"
 #include "VertexShader.h"
 #include "ShaderLibrary.h"
+#include "SceneWriter.h"
+#include "SceneReader.h"
+
+
 MenuScreen::MenuScreen() : AUIScreen("MenuScreen")
 {
+    this->openSceneDialog = new ImGui::FileBrowser();
+    this->openSceneDialog->SetTitle("Open Scene");
+    this->openSceneDialog->SetTypeFilters({ ".iet" });
+
+    this->saveSceneDialog = new ImGui::FileBrowser(ImGuiFileBrowserFlags_EnterNewFilename);
+    this->saveSceneDialog->SetTitle("Save Scene");
+    this->saveSceneDialog->SetTypeFilters({ ".iet" });
 }
 
 MenuScreen::~MenuScreen()
@@ -15,7 +26,25 @@ MenuScreen::~MenuScreen()
 
 void MenuScreen::drawUI()
 {
+
+	
 	if (ImGui::BeginMainMenuBar()) {
+
+        if (ImGui::BeginMenu("File")) {
+            if (ImGui::MenuItem("Open..", "Ctrl+O")) {
+                this->openSceneDialog->Open();
+            }
+            if (ImGui::MenuItem("Save", "Ctrl+S")) {
+                this->saveSceneDialog->Open();
+            }
+            if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S")) {
+                this->saveSceneDialog->Open();
+            }
+            if (ImGui::MenuItem("Exit Editor", "Ctrl+W")) {/*Do something */ }
+            ImGui::EndMenu();
+        }
+
+		
 		if (ImGui::BeginMenu("About")) {
 			if (ImGui::MenuItem("Credits")) 
 			{
@@ -102,13 +131,13 @@ void MenuScreen::drawUI()
             if (ImGui::MenuItem("Cube"))
             {
                 //Call to game object manager
-                GameObjectManager::getInstance()->createObject(PrimitiveType::CUBE);
+                GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::CUBE);
             }
 
             if (ImGui::MenuItem("Plane"))
             {
                 //Call to game object manager
-                GameObjectManager::getInstance()->createObject(PrimitiveType::PLANE);
+                GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::PLANE);
 
 
             }
@@ -116,7 +145,7 @@ void MenuScreen::drawUI()
             if (ImGui::MenuItem("TexturedCube"))
             {
                 //Call to game object manager
-                GameObjectManager::getInstance()->createObject(PrimitiveType::TEXTURED_CUBE);
+                GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::TEXTURED_CUBE);
 
 
             }
@@ -124,14 +153,14 @@ void MenuScreen::drawUI()
             if (ImGui::MenuItem("Teapot"))
             {
                 //Call to game object manager
-                GameObjectManager::getInstance()->createObject(PrimitiveType::TEAPOT);
+                GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::TEAPOT);
 
 
             }
             if (ImGui::MenuItem("Bunny"))
             {
                 //Call to game object manager
-                GameObjectManager::getInstance()->createObject(PrimitiveType::BUNNY);
+                GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::BUNNY);
 
 
             }
@@ -139,25 +168,48 @@ void MenuScreen::drawUI()
             if (ImGui::MenuItem("Armadillo"))
             {
                 //Call to game object manager
-                GameObjectManager::getInstance()->createObject(PrimitiveType::ARMADILLO);
+                GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::ARMADILLO);
 
 
             }
             if (ImGui::MenuItem("Physics Cube"))
             {
                 //Call to game object manager
-                GameObjectManager::getInstance()->createObject(PrimitiveType::PHYSICS_CUBE);
+                GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::PHYSICS_CUBE);
 
 
             }
 
         	if(ImGui::MenuItem("Physics Plane"))
         	{
-                GameObjectManager::getInstance()->createObject(PrimitiveType::PHYSICS_PLANE);
+                GameObjectManager::getInstance()->createObject(AGameObject::PrimitiveType::PHYSICS_PLANE);
 
         	}
             ImGui::EndMenu();
         }
 		ImGui::EndMainMenuBar();
 	}
+
+
+
+    this->openSceneDialog->Display();
+    this->saveSceneDialog->Display();
+
+    if (this->saveSceneDialog->HasSelected())
+    {
+        SceneWriter writer = SceneWriter(this->saveSceneDialog->GetSelected().string());
+        writer.writeToFile();
+
+        this->saveSceneDialog->ClearSelected();
+        this->saveSceneDialog->Close();
+    }
+
+    else if (this->openSceneDialog->HasSelected()) {
+        SceneReader reader = SceneReader(this->openSceneDialog->GetSelected().string());
+        reader.readFromFile();
+
+        this->openSceneDialog->ClearSelected();
+        this->openSceneDialog->Close();
+    }
+	
 }

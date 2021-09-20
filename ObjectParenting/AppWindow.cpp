@@ -1,6 +1,8 @@
 
 #include "AppWindow.h"
 #include <windows.h>
+
+
 #include "InputSystem.h"
 #include "SceneCameraHandler.h"
 #include "GameObjectManager.h"
@@ -9,6 +11,8 @@
 #include "ShaderLibrary.h"
 #include "BaseComponentSystem.h"
 #include "PhysicsSystem.h"
+#include "EngineBackend.h"
+#include "ActionHistory.h"
 AppWindow::AppWindow()
 {
 }
@@ -20,6 +24,7 @@ AppWindow::~AppWindow()
 
 void AppWindow::initialize()
 {
+	EngineBackend::initialize();
 	GraphicsEngine::get()->init();
 	GraphicsEngine* graphicsEngine = GraphicsEngine::get();
 
@@ -28,18 +33,21 @@ void AppWindow::initialize()
 	int width = window.right - window.left;
 	int height = window.bottom - window.top;
 	
-	std::cout << "creating shaderLibrary" << endl;
+	std::cout << "creating shaderLibrary" << std::endl;
+	ShaderLibrary::initialize();
 	TextureManager::initialize();
 	MeshManager::initialize();
-	ShaderLibrary::initialize();
+	
 	BaseComponentSystem::initialize();
+	ActionHistory::initialize();
 	/*
-	void* shaderByteCode = nullptr;
+	void* shader
+	Code = nullptr;
 	size_t sizeShader = 0;
 	graphicsEngine->compileVertexShader(L"VertexShader.hlsl", "vsmain", &shaderByteCode, &sizeShader);
 	this->m_vs = graphicsEngine->createVertexShader(shaderByteCode, sizeShader);
 	*/
-	std::cout << "done creating shaderLibrary" << endl;
+	std::cout << "done creating shaderLibrary" << std::endl;
 	
 	
 	camera.setIdentity();
@@ -89,6 +97,27 @@ void AppWindow::onUpdate()
 
 	deviceContext->setViewportSize(width, height);
 
+	EngineBackend* backend = EngineBackend::getInstance();
+	
+
+	if (backend->getMode() == EngineBackend::EditorMode::PLAY) {
+		BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
+		GameObjectManager::getInstance()->updateAll();
+	}
+	else if (backend->getMode() == EngineBackend::EditorMode::EDITOR) {
+		GameObjectManager::getInstance()->updateAll();
+		
+	}
+	else if (backend->getMode() == EngineBackend::EditorMode::PAUSED) {
+		if (backend->insideFrameStep()) {
+			BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
+			GameObjectManager::getInstance()->updateAll();
+			backend->endFrameStep();
+		}
+	}
+
+
+	/*
 	
 	BaseComponentSystem::getInstance()->getPhysicsSystem()->updateAllComponents();
 	//Update from game manager
@@ -96,14 +125,14 @@ void AppWindow::onUpdate()
 
 	//Draw from game object manager
 	GameObjectManager::getInstance()->renderAll(width, height);
-	/*
+	
 	for(int i = 0; i < this->quadList.size(); i ++)
 	{	
 		this->quadList[i]->update(EngineTime::getDeltaTime());
 		this->quadList[i]->draw(width, height);
 	}
 	*/
-
+	GameObjectManager::getInstance()->renderAll(width, height); 
 	SceneCameraHandler::get()->update();
 	UIManager::getInstance()->drawAllUI();
 	
@@ -116,11 +145,18 @@ void AppWindow::onDestroy()
 	m_swap_chain->release();
 	//m_vs->release();
 	//m_ps->release();
+	
+	//EngineBackend::destroy();
+	//SceneCameraHandler::destroy();
+	//GraphicsEngine::get()->release();
+	//ShaderLibrary::destroy();
+	//TextureManager::destroy();
+	//BaseComponentSystem::destroy();
+	//ActionHistory::destroy();
+
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
-	GraphicsEngine::get()->release();
-	
 }
 
 void AppWindow::onFocus()
@@ -140,7 +176,27 @@ void AppWindow::onKeyDown(int key)
 
 void AppWindow::onKeyUp(int key)
 {
+	int CTRL_Y = 89;
+	int CTRL_Z = 90;
+	int KEY_DELETE = 46;
 
+	if (key == CTRL_Z) {
+		if (ActionHistory::getInstance()->hasRemainingUndoActions()) {
+			GameObjectManager::getInstance()->applyEditorAction(ActionHistory::getInstance()->undoAction());
+		}
+	}
+	else if (key == CTRL_Y) {
+		if (ActionHistory::getInstance()->hasRemainingRedoActions()) {
+			GameObjectManager::getInstance()->applyEditorAction(ActionHistory::getInstance()->redoAction());
+		}
+	}
+	else if (key == KEY_DELETE) {
+		AGameObject* selectedObject = GameObjectManager::getInstance()->getSelectedObject();
+		if (selectedObject != NULL) {
+			GameObjectManager::getInstance()->deleteObject(selectedObject);
+			GameObjectManager::getInstance()->setSelectedObject(NULL);
+		}
+	}
 }
 
 void AppWindow::onMouseMove(const Point& deltaMousePos)

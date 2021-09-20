@@ -2,7 +2,7 @@
 #include "SceneCameraHandler.h"
 #include "ShaderLibrary.h"
 
-Plane::Plane(string name) : AGameObject(name)
+Plane::Plane(std::string name, PrimitiveType type) : AGameObject(name,type)
 {
 	ShaderNames shaderNames;
 	void* shaderByteCode = NULL;

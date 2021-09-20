@@ -9,7 +9,11 @@
 #include "reactphysics3d/reactphysics3d.h"
 
 
-using namespace std;
+//using namespace std::;
+class GameObjectManager;
+class VertexShader;
+class PixelShader;
+class EditorAction;
 
 struct vertex
 {
@@ -29,11 +33,23 @@ struct constant
 
 class VertexShader;
 class PixelShader;
-
+class EditorAction;
 class AGameObject
 {
 public:
-
+	enum PrimitiveType {
+		CAMERA,
+		CUBE,
+		PLANE,
+		SPHERE,
+		TEXTURED_CUBE,
+		TEAPOT,
+		BUNNY,
+		ARMADILLO,
+		PHYSICS_CUBE,
+		PHYSICS_PLANE
+	};
+ 
 	struct AQuaternion {
 		float w = 0.0f;
 		float x = 0.0f;
@@ -42,7 +58,7 @@ public:
 	};
 
 	
-	AGameObject(string name);
+	AGameObject(std::string name, PrimitiveType type);
 	~AGameObject();
 
 	typedef std::string String;
@@ -65,8 +81,8 @@ public:
 	void setRotation(float x, float y, float z, float w);//added from sir
 	Vector3D getLocalRotation();
 
-	string getName();
-	void setName(string newName);
+	std::string getName();
+	void setName(std::string newName);
 
 	bool isEnabled();
 	void setEnabled(bool state);
@@ -81,6 +97,7 @@ public:
 	void updateLocalMatrix(); //updates local matrix based from latest position, rotation, and scale.
 	void setLocalMatrix(float matrix[16]);
 	float* getRawMatrix();
+	Matrix4x4 getLocalMatrix();
 	float* getPhysicsLocalMatrix(); //scale is set to 1.0
 
 	friend class GameObjectManager;
@@ -93,12 +110,20 @@ public:
 	ComponentList getComponentsOfType(AComponent::ComponentType type);
 	ComponentList getComponentsOfTypeRecursive(AComponent::ComponentType type);
 
+	virtual void saveEditState();
+	virtual void restoreEditState();
+
+	void setOrientation(AQuaternion neworientation);
+	void setLocalMatrix(Matrix4x4 newlocalMatrix);
+
+	PrimitiveType getObjectType();
+
 protected:
 	void setParent(AGameObject* newParent);
 	bool hasParent;
 	AGameObject* Parent;
 
-	string name;
+	std::string name;
 	bool enabled = true;
 	Vector3D localPosition;
 	Vector3D localScale;
@@ -115,5 +140,9 @@ protected:
 	//Parent checking
 	//Vector3D getPositionRecursive(float localx, float localy, float localz, AGameObject* parent);
 
-	vector<AGameObject*> ChildList;
+	std::vector<AGameObject*> ChildList;
+
+	EditorAction* lastEditState = NULL;
+
+	PrimitiveType objectType;
 };

@@ -40,7 +40,7 @@ public:
 	virtual void onRightMouseDown(const Point& deltaMousePos) override;
 	virtual void onRightMouseUp(const Point& deltaMousePos) override;
 
-	typedef vector<AGameObject*> QuadList;
+	typedef std::vector<AGameObject*> QuadList;
 	
 private:
 	SwapChain * m_swap_chain;

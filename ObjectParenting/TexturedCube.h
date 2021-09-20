@@ -5,7 +5,7 @@ class TexturedCube :
     public Quad
 {
 public:
-	TexturedCube(string name);
+	TexturedCube(std::string name, PrimitiveType type);
 	~TexturedCube();
 
 	void draw(int width, int height) override;

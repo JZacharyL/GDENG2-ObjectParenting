@@ -4,7 +4,7 @@ class PhysicsPlane :
     public Quad
 {
 public:
-	PhysicsPlane(String name, bool skipInit = false);
+	PhysicsPlane(String name, PrimitiveType type,bool skipInit = false);
 	~PhysicsPlane();
 };
 

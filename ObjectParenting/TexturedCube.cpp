@@ -5,7 +5,7 @@
 #include "TextureManager.h"
 #include "VertexBuffer.h"
 #include "TexturedVertexBuffer.h"
-TexturedCube::TexturedCube(string name) : Quad(name)
+TexturedCube::TexturedCube(std::string name, PrimitiveType type) : Quad(name,type)
 {
 	ShaderNames shaderNames;
 	void* shaderByteCode = NULL;

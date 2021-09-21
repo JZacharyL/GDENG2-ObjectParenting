@@ -50,8 +50,8 @@ void AppWindow::initialize()
 	std::cout << "done creating shaderLibrary" << std::endl;
 	
 	
-	camera.setIdentity();
-	camera.setTranslation(Vector3D(0, 0, -2.0f));
+	//camera.setIdentity();
+	//camera.setTranslation(Vector3D(0, 0, -2.0f));
 
 	
 

@@ -202,6 +202,38 @@ void GameObjectManager::createObjectFromFile(String name, AGameObject::Primitive
 		plane->setScale(scale);
 		this->addObject(plane);
 	}
+
+	else if (type == AGameObject::PrimitiveType::TEAPOT) {
+		std::cout << "Textured Teapot order parsed" << std::endl;
+		Teapot* Potter = new Teapot("Teapot", type);
+		Potter->setPosition(position);
+		Potter->setRotation(rotation);
+		Potter->setScale(scale);
+		this->addObject(Potter);
+
+	}
+
+	else if (type == AGameObject::PrimitiveType::BUNNY) {
+		//std::cout << "Textured BUNNY order parsed" << std::endl;
+		Bunny* Pekora = new Bunny("Bunny", type);
+		//std::cout << "Textured BUNNY order Created" << std::endl;
+		Pekora->setPosition(position);
+		Pekora->setRotation(rotation);
+		Pekora->setScale(scale);
+		
+		this->addObject(Pekora);
+
+	}
+	else if (type == AGameObject::PrimitiveType::ARMADILLO) {
+		std::cout << "Textured ARMADILLO order parsed" << std::endl;
+		Armadillo* Bob = new Armadillo("Armadillo", type);
+
+		Bob->setPosition(position);
+		Bob->setRotation(rotation);
+		Bob->setScale(scale);
+		this->addObject(Bob);
+	}
+
 }
 
 void GameObjectManager::deleteObject(AGameObject* gameObject)

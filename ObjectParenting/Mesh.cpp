@@ -1,7 +1,7 @@
 #pragma once
-#pragma warning(suppress : 4996)
-#define TINYOBJLOADER_IMPLEMENTATION
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING 
 #include "Mesh.h"
 
 #include <tiny_obj_loader.h>
@@ -23,8 +23,8 @@ Mesh::Mesh(const wchar_t* full_path): AResource(full_path)
 	std::string warn;
 	std::string err;
 
-	//std::string inputfile = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(full_path); //THIS DOESNT WORK IN C++17 
-	std::string inputfile = "NULL";
+	std::string inputfile = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(full_path); //THIS DOESNT WORK IN C++17 
+	//std::string inputfile = "NULL";
 	bool res = tinyobj::LoadObj(&attribs, &shapes, &materials, &warn, &err, inputfile.c_str());
 
 	if (!err.empty()) throw std::exception("Mesh not created successfully");

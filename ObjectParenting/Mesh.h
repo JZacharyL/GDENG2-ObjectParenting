@@ -15,6 +15,8 @@ public:
 private:
 	VertexBuffer* m_vertex_buffer;
 	IndexBuffer* m_index_buffer;
+
+	
 private:
 	friend class DeviceContext;
 };

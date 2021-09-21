@@ -11,15 +11,15 @@ Plane::Plane(std::string name, PrimitiveType type) : AGameObject(name,type)
 	
 	vertex vertex_list[] =
 	{
-		{Vector3D(-0.25f,-0.01f,-0.25f),	Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS1
-		{Vector3D(-0.25f,0.01f,-0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS2
-		{Vector3D(0.25f,0.01f,-0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS3
-		{Vector3D(0.25f,-0.01f,-0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)},
+		{Vector3D(-0.25f,-0.01f,-0.25f),	Vector3D(0.8,0.8,0.8),		Vector3D(0.8,0.8,0.8)}, // POS1
+		{Vector3D(-0.25f,0.01f,-0.25f),		Vector3D(0.8,0.8,0.8),		Vector3D(0.8,0.8,0.8)}, // POS2
+		{Vector3D(0.25f,0.01f,-0.25f),		Vector3D(0.8,0.8,0.8),		Vector3D(0.8,0.8,0.8)}, // POS3
+		{Vector3D(0.25f,-0.01f,-0.25f),		Vector3D(0.8,0.8,0.8),		Vector3D(0.8,0.8,0.8)},
 
-		{Vector3D(0.25f,-0.01f,0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS1
-		{Vector3D(0.25f,0.01f,0.25f),			Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS2
-		{Vector3D(-0.25f,0.01f,0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)}, // POS3
-		{Vector3D(-0.25f,-0.01f,0.25f),		Vector3D(1,1,1),		Vector3D(1,1,1)},
+		{Vector3D(0.25f,-0.01f,0.25f),		Vector3D(0.8,0.8,0.8),		Vector3D(0.8,0.8,0.8)}, // POS1
+		{Vector3D(0.25f,0.01f,0.25f),			Vector3D(0.8,0.8,0.8),		Vector3D(0.8,0.8,0.8)}, // POS2
+		{Vector3D(-0.25f,0.01f,0.25f),		Vector3D(0.8,0.8,0.8),		Vector3D(0.8,0.8,0.8)}, // POS3
+		{Vector3D(-0.25f,-0.01f,0.25f),		Vector3D(0.8,0.8,0.8),		Vector3D(0.8,0.8,0.8)},
 	};
 
 	this->vertexBuffer = GraphicsEngine::get()->createVertexBuffer();

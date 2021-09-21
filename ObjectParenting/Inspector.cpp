@@ -26,9 +26,16 @@ void Inspector::drawUI()
 
 		this->updateTransformDisplays();
 		bool enabled = this->selectedObject->isEnabled();
-		if (ImGui::Checkbox("Enabled", &enabled)) { this->selectedObject->setEnabled(enabled); }
+		if (ImGui::Checkbox("Enabled", &enabled))
+		{
+			this->selectedObject->setEnabled(enabled);
+		}
 
-		if (ImGui::Button("Delete")) { GameObjectManager::getInstance()->deleteObjectByName(this->selectedObject->getName()); }
+		if (ImGui::Button("Delete"), &enabled)
+		{
+			this->selectedObject->setEnabled(enabled);
+			/*GameObjectManager::getInstance()->deleteObjectByName(this->selectedObject->getName()); */
+		}
 		if (ImGui::InputFloat3("Position", this->positionDisplay, 4));
 
 		if (ImGui::IsItemDeactivatedAfterEdit()) {

@@ -1,0 +1,10 @@
+Cube
+Type: 1
+Position: 0 0 0
+Rotation: 0 0 0
+Scale: 1 1 1
+Cube(1)
+Type: 1
+Position: 2 0 0
+Rotation: 0 0.785398 0
+Scale: 1 1 1

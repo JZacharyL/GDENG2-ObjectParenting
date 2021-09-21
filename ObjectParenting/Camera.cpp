@@ -29,43 +29,36 @@ void Camera::update(float deltaTime)
 	float x = localPos.getX();
 	float y = localPos.getY();
 	float z = localPos.getZ();
-	float moveSpeed = 1.0f;
+	float moveSpeed = 5.0f;
 
-	//WASD movement
-	if(InputSystem::get()->isKeyDown('W'))
-	{
+	if (InputSystem::get()->isKeyDown('W')) {
 		z += deltaTime * moveSpeed;
 		this->setPosition(x, y, z);
 		this->updateViewMatrix();
 	}
-	if (InputSystem::get()->isKeyDown('S'))
-	{
+	else if (InputSystem::get()->isKeyDown('S')) {
 		z -= deltaTime * moveSpeed;
 		this->setPosition(x, y, z);
 		this->updateViewMatrix();
 	}
-	if (InputSystem::get()->isKeyDown('D'))
-	{
+	else if (InputSystem::get()->isKeyDown('D')) {
 		x += deltaTime * moveSpeed;
 		this->setPosition(x, y, z);
 		this->updateViewMatrix();
 	}
-	if (InputSystem::get()->isKeyDown('A'))
-	{
+	else if (InputSystem::get()->isKeyDown('A')) {
 		x -= deltaTime * moveSpeed;
 		this->setPosition(x, y, z);
 		this->updateViewMatrix();
 	}
 
-	//Move across y axis
-	if (InputSystem::get()->isKeyDown('Q'))
-	{
+	else if (InputSystem::get()->isKeyDown('E')) {
 		y += deltaTime * moveSpeed;
 		this->setPosition(x, y, z);
 		this->updateViewMatrix();
 	}
-	if (InputSystem::get()->isKeyDown('E'))
-	{
+	
+	else if (InputSystem::get()->isKeyDown('Q')) {
 		y -= deltaTime * moveSpeed;
 		this->setPosition(x, y, z);
 		this->updateViewMatrix();
@@ -94,6 +87,8 @@ void Camera::updateViewMatrix()
 
 	worldCam.inverse();
 	this->localMatrix = worldCam;
+
+
 	
 }
 
@@ -131,8 +126,9 @@ void Camera::onMouseMove(const Point& deltaMousePos)
 {
 	InputSystem::get()->ShowCursor(true);
 	//If mouse is down
+	
 	if (this->mouseDown) {
-		InputSystem::get()->ShowCursor(false);
+		//InputSystem::get()->ShowCursor(false);
 		//Get local values of camera
 		Vector3D localRot = this->getLocalRotation();
 		float x = localRot.getX();
@@ -155,6 +151,22 @@ void Camera::onMouseMove(const Point& deltaMousePos)
 		//Re-center mouse
 		InputSystem::get()->setCursorPosition(Point(width / 2.0f, height / 2.0f));
 	}
+	/*
+	if (this->mouseDown) {
+		Vector3D localRot = this->getLocalRotation();
+		float x = localRot.getX();
+		float y = localRot.getY();
+		float z = localRot.getZ();
+
+		float speed = 0.1f;
+		x += deltaMousePos.y * speed;
+		y += deltaMousePos.x * speed;
+
+		this->setRotation(x, y, z);
+		this->updateViewMatrix();
+
+		std::cout << " Local rot: " << this->getLocalRotation().getX() << " " << this->getLocalRotation().getY() << " " << this->getLocalRotation().getZ() << "\n";
+	}*/
 }
 
 void Camera::onLeftMouseDown(const Point& deltaMousePos)
